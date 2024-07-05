@@ -11,6 +11,19 @@ declare global {
   return this;
 }
 
-const calendar = new CalendarFz('#calendar');
+const calendar = new CalendarFz('#calendar', {
+  currentDate: new Date('2022-01-01'),
+});
 
+document.getElementById('next')?.addEventListener('click', () => {
+  calendar.next();
+})
+
+document.getElementById('prev')?.addEventListener('click', () => {
+  calendar.previous();
+})
+const selectInterval = document.getElementById('select-interval')! as HTMLSelectElement;
+selectInterval!.addEventListener('change', () => {
+  calendar.changeInterval(+selectInterval!.value);
+})
 

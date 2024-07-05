@@ -1,61 +1,94 @@
+import { CommunicationService } from "../../../application/CommunicationService";
+import { getLabelDays, getLabelMonths } from "../../tools/tools";
+import { IHeaderCalendar, IWeekViewOptions } from "../contracts/ICalendar";
 import { IColumn } from "../contracts/IColumn";
 import { ColumnHead } from "./ColumnHead";
+import { DescriptionHead } from "./DescriptionHead";
 
-export interface IHeaderWeekOptions {
-  currentDate: Date;
-  omitDays: number[];
-}
-
-const defaultHeaderWeekOptions = {
-  currentDate: new Date(),
-  omitDays: [],
-};
-
-
-export class HeaderWeek {
+export class HeaderWeek implements IHeaderCalendar {
   elementHeader = document.createElement("div");
-  options!: IHeaderWeekOptions;
+  descriptionHead!: DescriptionHead;
+  //options!: IHeaderWeekOptions;
   columns: IColumn[] = [];
 
-  constructor(options: IHeaderWeekOptions | {} = {}) {
+  sprintDays = 7;
+
+  firstDate!: Date;
+
+  constructor(private id: symbol) {
     this.elementHeader.classList.add("calendar__header_week");
-    this.options = { ...defaultHeaderWeekOptions, ...options };
     this.render();
   }
+
+  getDescription() {
+    return "Semana";
+  }
+
 
   getElement() {
     return this.elementHeader;
   }
 
-  setCurrentDate(currentDate: Date) {
-    this.options.currentDate = currentDate;
-    return this;
-  }
-
   buildStartDate() {
-    const dayNum = new Date(this.options.currentDate).getDay();
+    const { currentDate } = this.getOptions();
+    const dayNum = new Date(currentDate).getDay();
     if (dayNum === 0) {
-      return this.options.currentDate;
+      return currentDate;
     } else {
-      return this.options.currentDate.addDays(-dayNum + 1);
+      return currentDate.addDays(-dayNum + 1);
     }
   }
 
+  getOptions() {
+    return CommunicationService.getInstance().getOptions(
+      this.id
+    )! as IWeekViewOptions;
+  }
+
+  next() {
+    let { currentDate } = this.getOptions();
+    currentDate.addDays(this.sprintDays);
+    //const auxDate = new Date(currentDate);
+    this.columns.forEach((column) => {
+        let columnHead = column as ColumnHead
+       let date = columnHead.getDate();
+       date.addDays(this.sprintDays);
+       columnHead.setTextDay(date.getDate().toString());
+       columnHead.setTextLabel(getLabelDays(date.getDay()));
+    })
+    this.descriptionHead.update();
+  }
+
+  previous() {
+    let { currentDate } = this.getOptions();
+    currentDate.addDays(-this.sprintDays);
+    //const auxDate = new Date(currentDate);
+    this.columns.forEach((column) => {
+        let columnHead = column as ColumnHead
+       let date = columnHead.getDate();
+       date.addDays(-this.sprintDays);
+       columnHead.setTextDay(date.getDate().toString());
+       columnHead.setTextLabel(getLabelDays(date.getDay()));
+    })
+    this.descriptionHead.update();
+  }
+
   render() {
+    let { omitDays, currentDate } = this.getOptions();
     this.elementHeader.innerHTML = "";
-    // element para la columna de hora
-    this.elementHeader.append(document.createElement("div"));
+    this.descriptionHead = new DescriptionHead(this.id);
+    this.descriptionHead.render(this.elementHeader);
+
     let numColumns = 0;
-    const startDate = this.buildStartDate();
-    const auxDate = new Date(startDate);
-    for (let i = 0; i < 7; i++) {
-        // si hay dias de descanso no apareceran en el calendario
-      if (this.options.omitDays.includes(auxDate.getDay())) {
+    currentDate = this.buildStartDate();
+    const auxDate = new Date(currentDate);
+    for (let i = 0; i < this.sprintDays; i++) {
+      if (omitDays!.includes(auxDate.getDay())) {
         auxDate.addDays(1);
         continue;
       }
       numColumns++;
-      const column = new ColumnHead(this.elementHeader, auxDate);
+      const column = new ColumnHead(this.elementHeader, new Date(auxDate));
       column.render();
       this.columns.push(column);
       auxDate.addDays(1);

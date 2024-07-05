@@ -17,6 +17,23 @@ export function getLabelDays(dayNum: number) {
     "Sábado",
   ][dayNum];
 }
+
+export function getLabelMonths(monthNum: number) {
+  return [
+    "Enero",
+    "Febrero",
+    "Marzo",
+    "Abril",
+    "Mayo",
+    "Junio",
+    "Julio",
+    "Agosto",
+    "Septiembre",
+    "Octubre",
+    "Noviembre",
+    "Diciembre",
+  ][monthNum];
+}
 // export const HEIGHT_ROW_HOURS = 32;
 export function convertMinutesToPixels(minutes: number) {
   return (minutes / 60) * 100;

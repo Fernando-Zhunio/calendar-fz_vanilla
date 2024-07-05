@@ -7,8 +7,20 @@
     <title>Vite + TS</title>
   </head>
   <body>
-    <div id="app"></div>
-    <div id="calendar"></div>
+    <div style="display: flex;">
+      <div id="app">
+        <button id="prev">prev</button>
+        <button id="next">next</button>
+        <select name="" id="select-interval">
+          <option value="5">5 min</option>
+          <option value="10">10 min</option>
+          <option value="15">15 min</option>
+          <option value="30">30 min</option>
+          <option value="60">60 min</option>
+        </select>
+      </div>
+      <div id="calendar"></div>
+    </div>
     <script type="module" src="/src/main.ts"></script>
   </body>
 </html>

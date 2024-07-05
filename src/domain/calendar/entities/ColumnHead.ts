@@ -13,6 +13,10 @@ export class ColumnHead extends Column {
         this.date = new Date(this.date);
         return this;
     }
+
+    getDate() {
+        return this.date;
+    }
     render() {
         super.render();
         this.renderDay();

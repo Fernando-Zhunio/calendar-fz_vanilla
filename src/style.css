@@ -73,3 +73,7 @@
 .height-row-week {
   height: var(--height-row-week);
 }
+
+.calendar__body_week_columns__column {
+  border-left: 1px solid #dadada;
+}
