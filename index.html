@@ -1,13 +1,24 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Vite + TS</title>
+    <link rel="stylesheet" href="src/styles-popover.css">
+    <style>
+      #form-template #form-calendar-task-add {
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
+        max-width: 100%;
+        transition: width 0.5s;
+      }
+    </style>
   </head>
   <body>
-    <div style="display: flex;">
+    <div style="display: flex">
       <div id="app">
         <button id="prev">prev</button>
         <button id="next">next</button>
@@ -19,7 +30,26 @@
           <option value="60">60 min</option>
         </select>
       </div>
-      <div id="calendar"></div>
+    </div>
+    <div id="calendar"></div>
+
+    <div id="form-template" class="hidden">
+      <div id="form-calendar-task-add" class="popover">
+        <div class="popover__header">
+          <h2 name="header">Hola este es un ejemplo</h2>
+          <button name="close">X</button>
+        </div>
+        <div class="popover__body">
+          <section name="body">
+            <form action="">
+              <div>
+                <label for="name">Nombre</label>
+                <input type="text" name="name">
+              </div>
+            </form>
+          </section>
+        </div>
+      </div>
     </div>
     <script type="module" src="/src/main.ts"></script>
   </body>

@@ -1,0 +1,23 @@
+.calendar__popover {
+    position: fixed;
+    z-index: 10;
+    display: flex;
+}
+
+.calendar__popover.hidden {
+    display: none;
+    width: 0;
+    height: 0;
+    opacity: 0;
+    transition: all 0.5s ease-out;
+}
+
+.calendar__popover .open {
+    width: auto;
+    height: auto;
+}
+
+.calendar__popover.animation {
+    /* animation: 0.5s ease-out forwards popoverAnimation; */
+    transition: all 0.5s ease-out;
+}
