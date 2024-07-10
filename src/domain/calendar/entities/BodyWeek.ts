@@ -1,11 +1,12 @@
 import { CommunicationService } from "../../../application/CommunicationService";
 import { listHoursByInterval } from "../../tools/tools";
-import { IWeekViewOptions } from "../contracts/ICalendar";
+import { ICalendarBody, IWeekViewOptions } from "../contracts/ICalendar";
 import { IColumn } from "../contracts/IColumn";
 import { ColumnBody } from "./ColumnBody";
 import { RowBody } from "./RowBody";
+import { ITaskPosition, TaskBody } from "./TaskBody";
 
-export class BodyWeek {
+export class BodyWeek implements ICalendarBody {
   elementBody = document.createElement("div");
   elementBodyColumns = document.createElement("div");
   elementBodyRows = document.createElement("div");
@@ -16,7 +17,6 @@ export class BodyWeek {
     this.elementBody.classList.add("calendar__body_week");
     this.elementBodyColumns.classList.add("calendar__body_week_columns");
     this.elementBodyRows.classList.add("calendar__body_week_rows");
-    //this.options = { ...defaultBodyWeekOptions, ...options };
     this.render();
   }
 
@@ -70,7 +70,7 @@ export class BodyWeek {
         continue;
       }
       numColumns++;
-      const column = new ColumnBody(this.elementBodyColumns, auxDate);
+      const column = new ColumnBody(this.elementBodyColumns, new Date(auxDate));
       column.render();
       this.columns.push(column);
       auxDate.addDays(1);
@@ -79,7 +79,45 @@ export class BodyWeek {
   }
 
   changeInterval(intervalMinutes: number) {
-    this.getOptions()!.intervalMinutes = intervalMinutes;   
+    this.getOptions()!.intervalMinutes = intervalMinutes;
+    this.rows = [];  
     this.renderRows();
+  }
+
+  updateTasks() {}
+
+  addTask(day: number, start: string, duration: number, template: HTMLElement | string) {
+    debugger
+    const columnDay = this.columns.find((column) =>  column.getDay() === day)!;
+    const position = this.calculePositionTask(start, duration);
+    const task = new TaskBody(position);
+    columnDay.addTask(task);
+  }
+
+  calculePositionTask(startTime: string, duration: number): ITaskPosition {
+    const heightPixelsRow = this.rows[0].getElement()!.getBoundingClientRect().height;
+    // const intervalMinutes = this.getOptions()!.intervalMinutes;
+    const PxM = this.convertPixelsForMinutes(heightPixelsRow);
+    const diffMinutes = this.getMinutesDistance(this.getStartTime(), startTime);
+
+    return {
+      top: (diffMinutes * PxM) + "px",
+      height: (duration * PxM) + "px",
+    };
+  }
+
+  getMinutesDistance(startTime: string, endTime: string) {
+    const start = startTime.split(":").map(Number);
+    const end = endTime.split(":").map(Number);
+    return (end[0] - start[0]) * 60 + (end[1] - start[1]);
+  }
+
+  getStartTime() {
+    return this.getOptions()!.startTime;
+  }
+
+  convertPixelsForMinutes(pixels: number) {
+    const intervalMinutes = this.getOptions()!.intervalMinutes;
+    return pixels / intervalMinutes;
   }
 }

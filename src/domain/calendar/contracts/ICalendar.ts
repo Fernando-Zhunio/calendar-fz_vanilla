@@ -31,3 +31,7 @@ export interface IHeaderCalendar {
     next(): void;
     previous(): void;
 }
+
+export interface ICalendarBody {
+  addTask(column: number, startHour: string, duration: number, template: HTMLElement | string): void;
+}

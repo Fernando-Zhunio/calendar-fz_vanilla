@@ -1,4 +1,5 @@
 import { CommunicationService } from "../../../application/CommunicationService";
+import { ICalendarBody } from "../contracts/ICalendar";
 import { BodyWeek } from "../entities/BodyWeek";
 import { CalendarFz } from "../entities/CalendarFz";
 import { HeaderWeek } from "../entities/HeaderWeek";
@@ -15,9 +16,7 @@ export class WeekView implements IView {
   body!: BodyWeek;
   elementBody = document.createElement("div");
 
-  constructor(private id: symbol) {
-
-  }
+  constructor(private id: symbol) {}
 
   next() {
     this.header.next();
@@ -40,8 +39,8 @@ export class WeekView implements IView {
     calendarElement.appendChild(this.body.getElement());
   }
 
-  changeView(): void {
-    throw new Error("Method not implemented.");
+  getBody(): ICalendarBody {
+    return this.body;
   }
 
   changeInterval(interval: number) {

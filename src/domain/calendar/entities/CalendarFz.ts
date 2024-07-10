@@ -1,6 +1,7 @@
 import { CommunicationService } from "../../../application/CommunicationService";
 import { TypesView } from "../../tools/tools";
 import { IDayViewOptions, IWeekViewOptions, defaultWeekViewOptions, defaultDayViewOptions } from "../contracts/ICalendar";
+import { TypesCalendarEvent } from "../contracts/IEventsCalendar";
 import { WeekView } from "../values-object/WeekView";
 import { IView } from "./iview";
 
@@ -22,9 +23,14 @@ export class CalendarFz {
     this.changeView(TypesView.weeks, options);
   }
 
+  addEventListener(typesCalendarEvent:TypesCalendarEvent, callback: (e: any) => void) {
+    document.addEventListener(typesCalendarEvent, (e: any) => callback(e.detail));
+  }
+
   getElement() {
     return this.element;
   }
+
   render() {
     this.view.render(this.element);
   }
@@ -67,6 +73,11 @@ export class CalendarFz {
 
   changeInterval(interval: number) {
     this.view.changeInterval(interval);
+  }
+
+  addTask(day: number, startHour: string, duration: number, template: HTMLElement | string) {
+    CommunicationService.getInstance()
+    .addTask(this.id, day, startHour, duration, template);
   }
 }
 

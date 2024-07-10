@@ -12,6 +12,7 @@ export class Popover {
   getElement() {
     return document.getElementById(this.templateId)!;
   }
+  
   virtualElement(clientX: number, clientY: number) {
     return {
       getBoundingClientRect() {
