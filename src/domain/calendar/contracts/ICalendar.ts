@@ -1,8 +1,10 @@
 export interface IWeekViewOptions extends IViewOptions {
   omitDays?: number[];
+  startDay: 1 | 2 | 3 | 4 | 5 | 6 | 7;
+  sprintDays: 1 | 2 | 3 | 4 | 5 | 6 | 7;
 }
 
-interface IViewOptions {
+export interface IViewOptions {
   currentDate: Date;
   intervalMinutes: number;
   startTime: string;
@@ -25,6 +27,8 @@ export const defaultDayViewOptions = { ...defaultViewOptions, ...{} };
 export const defaultWeekViewOptions: IWeekViewOptions = {
   ...defaultViewOptions,
   omitDays: [],
+  startDay: 7,
+  sprintDays: 7,
 };
 
 export interface IHeaderCalendar {
@@ -33,5 +37,15 @@ export interface IHeaderCalendar {
 }
 
 export interface ICalendarBody {
-  addTask(column: number, startHour: string, duration: number, template: HTMLElement | string): void;
+  // addTask(column: number, dateTime: Date, duration: number, template: HTMLElement | string): void;
+}
+
+export interface ICalendarDataWeek extends ICalendarData {
+  startDate: Date;
+  endDate: Date;
+
+}
+
+export interface ICalendarData {
+
 }

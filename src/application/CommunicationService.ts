@@ -14,13 +14,18 @@ export class CommunicationService {
         return this.store.get(key);
     }
 
-    addTask(key: Symbol, column: number, startHour: string, duration: number, template: HTMLElement | string) {
-        this.getCalendar(key)?.view.getBody().addTask(column, startHour, duration, template);
+    addTask(key: Symbol, column: number, dateTime: Date, duration: number, template: HTMLElement | string) {
+        this.getCalendar(key)?.view.getBody().addTask(column, dateTime, duration, template);
     }
 
     getOptions(key: Symbol): IWeekViewOptions | IDayViewOptions | undefined {
         if(!this.store.get(key)) return;
         return this.store.get(key)!.getOptions();
+    }
+
+    getData(key: Symbol) {
+        if(!this.store.get(key)) return;
+        return this.store.get(key)!.getData();
     }
 
     public static getInstance(): CommunicationService {

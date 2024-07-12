@@ -2,13 +2,14 @@ import { CommunicationService } from "../../../application/CommunicationService"
 import { TypesView } from "../../tools/tools";
 import { IDayViewOptions, IWeekViewOptions, defaultWeekViewOptions, defaultDayViewOptions } from "../contracts/ICalendar";
 import { TypesCalendarEvent } from "../contracts/IEventsCalendar";
-import { WeekView } from "../values-object/WeekView";
+import { CalendarWeekView } from "../values-object/CalendarWeekView";
 import { IView } from "./iview";
 
 export class CalendarFz {
   view!: IView;
   private element: HTMLElement;
   private id = Symbol("CalendarFz");
+  typeView: TypesView = TypesView.weeks;
   private options!: IWeekViewOptions | IDayViewOptions;
 
   constructor(
@@ -31,9 +32,9 @@ export class CalendarFz {
     return this.element;
   }
 
-  render() {
-    this.view.render(this.element);
-  }
+  // render() {
+  //   this.view.render(this.element);
+  // }
 
 
   changeView(typeView: TypesView, options?: Partial<IWeekViewOptions | IDayViewOptions>) {
@@ -41,22 +42,22 @@ export class CalendarFz {
       case TypesView.days:
         this.options = {
           ...defaultDayViewOptions,
-          ...options,
+          ...(options as IDayViewOptions),
         };
         break;
       case TypesView.weeks:
         this.options = {
           ...defaultWeekViewOptions,
-          ...options,
+          ...(options as IWeekViewOptions),
         };
-        this.view = new WeekView(this.id);
+        this.view = new CalendarWeekView(this.id, this.element);
         break;
 
       default:
         break;
     }
-
-    this.render();
+    this.typeView = typeView;
+    //this.render();
   }
 
   getOptions() {
@@ -75,9 +76,13 @@ export class CalendarFz {
     this.view.changeInterval(interval);
   }
 
-  addTask(day: number, startHour: string, duration: number, template: HTMLElement | string) {
+  addTask(day: number, dateTime: Date, duration: number, template: HTMLElement | string) {
     CommunicationService.getInstance()
-    .addTask(this.id, day, startHour, duration, template);
+    .addTask(this.id, day, dateTime, duration, template);
+  }
+
+  getData() {
+    this.view.getData();
   }
 }
 

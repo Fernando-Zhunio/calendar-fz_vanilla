@@ -1,18 +1,15 @@
-import { Column } from "../entities/Column";
+//import { Column } from "../entities/Column";
 import { TaskBody } from "../entities/TaskBody";
 
 export interface IColumn {
-  render(): void;
+  render(parent: HTMLElement,): void;
   getElement(): HTMLElement;
-  getKey(): string;
-  getDay(): number;
+  getKey(): any;
   addTask(task: TaskBody): void;
 }
 
-export interface IColumnFactory  {
-  createColumn(): void;
-
-  renderColumns(): void;
-
-  getColumns(): Column[];
+export interface IColumnHead  {
+  // render(parent: HTMLElement): void;
+  getElement(): HTMLElement;
+  getKey(): any;
 }

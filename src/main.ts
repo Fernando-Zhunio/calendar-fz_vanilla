@@ -14,7 +14,7 @@ declare global {
 }
 
 const calendar = new CalendarFz('#calendar', {
-  currentDate: new Date('2022-01-01'),
+  //currentDate: new Date('2022-01-01'),
 });
 
 calendar.addEventListener(TypesCalendarEvent.CalendarRowClick, (e) => {

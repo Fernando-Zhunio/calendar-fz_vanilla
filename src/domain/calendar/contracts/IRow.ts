@@ -1,5 +1,5 @@
 export interface IRow {
-  render(parent: HTMLElement): void;
+  // render(parent: HTMLElement): void;
   getElement(): HTMLElement;
-  getKey(): string;
+  //getKey(): string;
 }
