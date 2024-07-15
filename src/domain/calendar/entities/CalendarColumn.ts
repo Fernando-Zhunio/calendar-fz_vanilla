@@ -7,7 +7,7 @@ import { CalendarElement } from "../values-object/CalendarElement";
 export class CalendarColumn extends CalendarElement {
     // private  elementBody = document.createElement("div");
     // private  elementHead = document.createElement("div");
-    element = document.createElement("div");
+    // element = document.createElement("div");
     private key!: any
     constructor(parent: HTMLElement) {
         super(parent);
@@ -26,11 +26,5 @@ export class CalendarColumn extends CalendarElement {
     setKey(key: any) {
         this.key = key;
     }
-
-
-
-    // addChild(child: HTMLElement) {
-    //     this.elementColumn.append(child);
-    // }
     
 }

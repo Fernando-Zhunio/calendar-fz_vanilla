@@ -1,22 +1,24 @@
+import { CalendarElement } from "../values-object/CalendarElement";
 import { CalendarBodyColumn } from "./CalendarBodyColumn";
 
-export class CalendarBodyColumnsWeek {
-  element = document.createElement("div");
+export class CalendarBodyContainerColumnsWeek extends CalendarElement {
+  //element = document.createElement("div");
 
   columns: CalendarBodyColumn[] = [];
-  constructor(private parent: HTMLElement) {
-    this.init(this.parent);
+  constructor(protected parent: HTMLElement) {
+    super(parent)
+    this.init();
     this.assignClassCss();
   }
 
-  init(parent: HTMLElement) {
+  init() {
     // este div es para la hora
     this.element.append(document.createElement("div"));
-    parent.append(this.element);
+    //parent.append(this.element);
   }
 
   assignClassCss() {
-    this.element.classList.add("calendar__body_columns_week");
+    this.element.classList.add("calendar__body_container_columns_week");
   }
 
   addColumn(date: Date) {

@@ -27,13 +27,13 @@ export const defaultDayViewOptions = { ...defaultViewOptions, ...{} };
 export const defaultWeekViewOptions: IWeekViewOptions = {
   ...defaultViewOptions,
   omitDays: [],
-  startDay: 7,
+  startDay: 1,
   sprintDays: 7,
 };
 
 export interface IHeaderCalendar {
-    next(): void;
-    previous(): void;
+    // next(): void;
+    // previous(): void;
 }
 
 export interface ICalendarBody {

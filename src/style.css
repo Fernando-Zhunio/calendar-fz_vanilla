@@ -1,14 +1,29 @@
-.calendar__header_week, .calendar__body_week_columns {
+.calendar__header_week,
+.calendar__body_container_columns_week {
   display: grid;
   padding: 0;
   text-align: center;
+}
+
+.calendar__fz {
+  padding: 20px;
+  border-radius: 20px;
+  box-shadow: 0px 0px 13px #dadada;
+}
+
+.calendar__header_week {
+  margin-bottom: 15px;
+  position: sticky;
+  top: 0;
+  background: white;
+  z-index: 10;
 }
 
 .calendar__body_week {
   /* border: solid 1px black; */
   position: relative;
 }
-.calendar__body_week_columns {
+.calendar__body_container_columns_week {
   position: absolute;
   left: 0;
   top: 0;
@@ -17,11 +32,14 @@
   z-index: 2;
   pointer-events: none;
 }
+
+.calendar__body_container_columns_week div {
+  border-right: 1px solid #dadada;
+}
 .calendar__body_week_rows {
   z-index: 1;
   position: relative;
   transition: background-color 0.5s;
-
 }
 .calendar__body_week_rows > div:hover {
   background-color: rgba(127, 255, 212, 0.226);
@@ -29,13 +47,15 @@
 }
 
 .calendar__header_week div div:first-child {
-  border: solid 1px black;
+  /* border: solid 1px black; */
   display: flex;
   justify-content: center;
   align-items: center;
   width: 30px;
   height: 30px;
   border-radius: 50%;
+  font-weight: bolder;
+  font-size: 35px;
 }
 
 .calendar__header_week > div {
@@ -47,6 +67,23 @@
   padding-inline: 8px;
 }
 
+.calendar-text-truncate {
+  /* width: 250px; */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.calendar-description-head {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  /* gap: 5px; */
+  /* padding-inline: 8px; */
+  /* font-size: 1.2rem; */
+}
+
 /* generte var */
 :root {
   --height-row-week: 36px;
@@ -54,19 +91,24 @@
 }
 
 .calendar__row__hours {
-  width: var(--width-label-hours);
-  height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
   border-right: 1px solid #dadada;
-  /* margin-block: 4px; */
+  position: absolute;
+  top: -10px;
+  background: #8c8c8c;
+  border-radius: 5px;
+  color: white;
+  font-size: 12px;
+  padding: 3px 4px;
 }
 
 .calendar__row {
-  height:  var(--height-row-week);
-  border-bottom: 1px solid #dadada;
+  height: var(--height-row-week);
+  border-top: 1px solid #dadada;
   box-sizing: border-box;
+  position: relative;
 }
 
 .height-row-week {

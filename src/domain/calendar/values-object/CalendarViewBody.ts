@@ -1,11 +1,11 @@
 import { CommunicationService } from "../../../application/CommunicationService";
 import { listHoursByInterval } from "../../tools/tools";
-import { IViewOptions, IWeekViewOptions } from "../contracts/ICalendar";
+import { IViewOptions } from "../contracts/ICalendar";
 // import { IView } from "../entities/iview";
 import { CalendarBodyRow } from "../entities/CalendarBodyRow";
 import { ITaskPosition } from "../entities/TaskBody";
 
-export abstract class CalendarViewBody<O = IViewOptions> extends EventTarget {
+export abstract class CalendarBodyRowsAndTaskTools<O = IViewOptions> extends EventTarget {
   elementRows = document.createElement("div");
   rows: CalendarBodyRow[] = [];
   constructor(protected calendarId: any /* public body: ICalendarBody */) {
@@ -20,21 +20,21 @@ export abstract class CalendarViewBody<O = IViewOptions> extends EventTarget {
     return this.rows;
   }
 
-//   protected buildRows() {
-//     this.elementRows.innerHTML = "";
-//     this.rows = [];
-//     const { intervalMinutes, startTime, endTime } =
-//       this.getOptions<IViewOptions>()!;
-//     const listHours = listHoursByInterval(intervalMinutes, startTime, endTime);
-//     listHours.forEach((hour) => {
-//       const row = new RowBody(this.elementRows, hour, this.calendarId);
-//       this.rows.push(row);
-//     });
-//   }
+  protected buildRows() {
+    this.elementRows.innerHTML = "";
+    this.rows = [];
+    const { intervalMinutes, startTime, endTime } =
+      this.getOptions<IViewOptions>()!;
+    const listHours = listHoursByInterval(intervalMinutes, startTime, endTime);
+    listHours.forEach((hour) => {
+      const row = new CalendarBodyRow(this.elementRows, hour, this.calendarId);
+      this.rows.push(row);
+    });
+  }
 
   changeInterval(intervalMinutes: number) {
     this.getOptions<IViewOptions>()!.intervalMinutes = intervalMinutes;
-    //this.buildRows();
+    this.buildRows();
     this.changeIntervalEffect();
   }
 
@@ -62,5 +62,4 @@ export abstract class CalendarViewBody<O = IViewOptions> extends EventTarget {
     const { intervalMinutes } = this.getOptions<IViewOptions>()!;
     return pixels / intervalMinutes;
   }
-
 }

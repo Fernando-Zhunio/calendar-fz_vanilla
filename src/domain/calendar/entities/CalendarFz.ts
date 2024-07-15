@@ -22,20 +22,21 @@ export class CalendarFz {
     }
     CommunicationService.getInstance().registerCalendar(this.id, this);
     this.changeView(TypesView.weeks, options);
+
+    this.assignClassCss();
   }
 
   addEventListener(typesCalendarEvent:TypesCalendarEvent, callback: (e: any) => void) {
     document.addEventListener(typesCalendarEvent, (e: any) => callback(e.detail));
   }
 
+  assignClassCss() {
+    this.element.classList.add("calendar__fz");
+  }
+
   getElement() {
     return this.element;
   }
-
-  // render() {
-  //   this.view.render(this.element);
-  // }
-
 
   changeView(typeView: TypesView, options?: Partial<IWeekViewOptions | IDayViewOptions>) {
     switch (typeView) {
@@ -77,8 +78,9 @@ export class CalendarFz {
   }
 
   addTask(day: number, dateTime: Date, duration: number, template: HTMLElement | string) {
-    CommunicationService.getInstance()
-    .addTask(this.id, day, dateTime, duration, template);
+    // CommunicationService.getInstance()
+    // .addTask(this.id, day, dateTime, duration, template);
+    this.view.addTask(dateTime, duration);
   }
 
   getData() {

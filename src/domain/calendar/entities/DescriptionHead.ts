@@ -9,6 +9,8 @@ export class DescriptionHead {
     constructor(private id: symbol) {
         this.elementDescription.classList.add("calendar__description")
         this.elementDescription.append(this.elementContentDescription)
+        this.elementContentDescription.classList.add("calendar-text-truncate")
+        this.elementContentDescription.classList.add("calendar-description-head")
         this.elementYear.classList.add("calendar__label_year")
         this.elementMonth.classList.add("calendar__label_month")
         this.elementContentDescription.append(this.elementMonth, this.elementYear)

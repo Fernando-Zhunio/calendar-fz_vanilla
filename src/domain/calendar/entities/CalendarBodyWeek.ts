@@ -1,17 +1,17 @@
 // import { CommunicationService } from "../../../application/CommunicationService";
 // import { listHoursByInterval } from "../../tools/tools";
 import { ICalendarBody, IWeekViewOptions } from "../contracts/ICalendar";
-import { CalendarViewBody } from "../values-object/CalendarViewBody";
-import { CalendarBodyColumnsWeek } from "./CalendarBodyColumnsWeek";
-import { CalendarBodyColumn } from "./CalendarBodyColumn";
+import { CalendarBodyRowsAndTaskTools } from "../values-object/CalendarViewBody";
+import { CalendarBodyContainerColumnsWeek } from "./CalendarBodyColumnsWeek";
+// import { CalendarBodyColumn } from "./CalendarBodyColumn";
 
 export class CalendarBodyWeek
-  extends CalendarViewBody<IWeekViewOptions>
+  extends CalendarBodyRowsAndTaskTools<IWeekViewOptions>
   implements ICalendarBody
 {
   element = document.createElement("div");
-  columnsWeek!: CalendarBodyColumnsWeek
-  columns: CalendarBodyColumn[] = [];
+  containerColumns!: CalendarBodyContainerColumnsWeek
+  //columns: CalendarBodyColumn[] = [];
   constructor(protected calendarId: symbol) {
     super(calendarId);
     this.init();
@@ -19,10 +19,10 @@ export class CalendarBodyWeek
   }
 
   init() {
-    this.columnsWeek = new CalendarBodyColumnsWeek(this.element);
+    this.containerColumns = new CalendarBodyContainerColumnsWeek(this.element);
     this.assignClassCss();
     this.element.append(this.elementRows);
-    //this.buildRows();
+    this.buildRows();
   }
 
   private assignClassCss() {
@@ -32,6 +32,17 @@ export class CalendarBodyWeek
 
   getElement() {
     return this.element;
+  }
+
+  // addColumn(date: Date) {
+
+  //   const column = new CalendarBodyColumn(date, this.containerColumns.getElement());
+  //   //this.columns.push(column);
+  //   return column;
+  // }
+
+  getContainerColumns() {
+    return this.containerColumns
   }
 
   // addTask(

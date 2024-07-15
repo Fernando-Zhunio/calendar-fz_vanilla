@@ -1,5 +1,4 @@
 import { CalendarElement } from "../values-object/CalendarElement";
-// import { CalendarColumn } from "./CalendarColumn";
 import { TaskBody } from "./TaskBody";
 
 export class CalendarBodyColumn extends CalendarElement {
@@ -9,10 +8,10 @@ export class CalendarBodyColumn extends CalendarElement {
     constructor(date: Date, parent: HTMLElement) {
         super(parent);
         this.init(date);
+        this.getElement().setAttribute("data-date", this.date.toLocaleDateString());
     }
 
     init(date: Date) {
-        //parent.append(this.element);
         this.date = new Date(date);
     }
 
@@ -30,6 +29,24 @@ export class CalendarBodyColumn extends CalendarElement {
             this.taskList.get(id)?.getElement().remove();
             this.taskList.delete(id);
         }
+    }
+
+    next(sprintDays = 7) {
+        this.date.addDays(sprintDays);
+        this.getElement().setAttribute("data-date", this.date.toLocaleDateString());
+
+        return this;
+    }
+
+    previous(sprintDays = 7) {
+        this.next(-sprintDays);
+        this.getElement().setAttribute("data-date", this.date.toLocaleDateString());
+
+        return this;
+    }
+
+    getDate() {
+        return this.date;
     }
 
 }

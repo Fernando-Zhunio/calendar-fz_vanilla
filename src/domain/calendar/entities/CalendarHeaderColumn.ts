@@ -14,8 +14,8 @@ export class CalendarHeaderColumn extends CalendarColumn implements IColumnHead 
     
     init() {
         this.renderDay();
-        this.renderLabel();
-        this.element.append(this.elementDay, this.elementLabel);
+        this.buildLabel();
+        // this.element.append(this.elementDay, this.elementLabel);
     }
 
     next(sprintDays = 7) {
@@ -33,19 +33,13 @@ export class CalendarHeaderColumn extends CalendarColumn implements IColumnHead 
         return this.date;
     }
 
-    // render(parent: HTMLElement,) {
-    //     super.render(parent);
-    //     this.renderDay();
-    //     this.renderLabel();
-    // }
-
     renderDay() {
         this.elementDay.textContent = this.date.getDate().toString();
         this.elementDay.classList.add("calendar__day");
         this.getElement().append(this.elementDay);
     }
 
-    renderLabel() {
+    buildLabel() {
         this.elementLabel.textContent = getLabelDays(this.date.getDay());
         this.elementLabel.classList.add("calendar__label");
         this.getElement().append(this.elementLabel);

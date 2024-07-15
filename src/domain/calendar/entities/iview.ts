@@ -7,4 +7,5 @@ export interface IView {
     changeInterval(interval: number): void
     getBody(): ICalendarBody
     getData(): ICalendarDataWeek 
+    addTask(startDate: Date, duration: number): void    
 }
