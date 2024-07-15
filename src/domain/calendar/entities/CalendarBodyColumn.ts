@@ -41,12 +41,29 @@ export class CalendarBodyColumn extends CalendarElement {
     previous(sprintDays = 7) {
         this.next(-sprintDays);
         this.getElement().setAttribute("data-date", this.date.toLocaleDateString());
-
         return this;
     }
 
     getDate() {
         return this.date;
     }
+
+    getOptions() {
+
+    }
+
+    // calculePositionTask(startTime: string, startCalendarTime: string, duration: number, interval: number): ITaskPosition {
+    //     // const { startTime: calendarStartTime } = this.getOptions<IViewOptions>()!;
+    //     const heightPixelsRow = this.rows[0]
+    //       .getElement()!
+    //       .getBoundingClientRect().height;
+    //     const PxM = convertPixelsForMinutes(heightPixelsRow, interval);
+    //     const diffMinutes = getMinutesDistance(startCalendarTime, startTime);
+      
+    //     return {
+    //       top: diffMinutes * PxM + "px",
+    //       height: duration * PxM + "px",
+    //     };
+    //   }
 
 }

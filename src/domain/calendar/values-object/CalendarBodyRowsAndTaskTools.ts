@@ -1,6 +1,7 @@
 import { CommunicationService } from "../../../application/CommunicationService";
 import { listHoursByInterval } from "../../tools/tools";
 import { IViewOptions } from "../contracts/ICalendar";
+// import { CalendarBodyColumn } from "../entities/CalendarBodyColumn";
 // import { IView } from "../entities/iview";
 import { CalendarBodyRow } from "../entities/CalendarBodyRow";
 import { ITaskPosition } from "../entities/TaskBody";
@@ -8,6 +9,7 @@ import { ITaskPosition } from "../entities/TaskBody";
 export abstract class CalendarBodyRowsAndTaskTools<O = IViewOptions> extends EventTarget {
   elementRows = document.createElement("div");
   rows: CalendarBodyRow[] = [];
+  // abstract columns: CalendarBodyColumn[]
   constructor(protected calendarId: any /* public body: ICalendarBody */) {
     super();
   }

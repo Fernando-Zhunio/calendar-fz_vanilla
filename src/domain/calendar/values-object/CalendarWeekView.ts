@@ -99,12 +99,14 @@ export class CalendarWeekView implements ICalendarView {
   }
 
   addTask(startDate: Date, duration: number) {
-    const columnBody = this.columnsHeaderAndBody.find(
-      (x) =>
-        x.columnBody.getDate().toLocaleDateString() ===
-        startDate.toLocaleDateString()
-    );
+    this.body.addTask(startDate, duration);
+    // const columnBody = this.body.getContainerColumns().columns.find(
+    //   (x) =>
+    //     x.getDate().toLocaleDateString() ===
+    //     startDate.toLocaleDateString()
+    // );
 
-    console.log({columnBody});
+    // columnBody?.columnBody.addTask(startDate, duration);
+    // console.log({columnBody});
   }
 }

@@ -1,8 +1,9 @@
 // import { CommunicationService } from "../../../application/CommunicationService";
 // import { listHoursByInterval } from "../../tools/tools";
 import { ICalendarBody, IWeekViewOptions } from "../contracts/ICalendar";
-import { CalendarBodyRowsAndTaskTools } from "../values-object/CalendarViewBody";
+import { CalendarBodyRowsAndTaskTools } from "../values-object/CalendarBodyRowsAndTaskTools";
 import { CalendarBodyContainerColumnsWeek } from "./CalendarBodyColumnsWeek";
+import { TaskBody } from "./TaskBody";
 // import { CalendarBodyColumn } from "./CalendarBodyColumn";
 
 export class CalendarBodyWeek
@@ -34,12 +35,19 @@ export class CalendarBodyWeek
     return this.element;
   }
 
-  // addColumn(date: Date) {
-
-  //   const column = new CalendarBodyColumn(date, this.containerColumns.getElement());
-  //   //this.columns.push(column);
-  //   return column;
-  // }
+  addTask(startDate: Date, duration: number) {
+    const columnBody = this.containerColumns.columns.find(
+      (x) =>
+        x.getDate().toLocaleDateString() ===
+        startDate.toLocaleDateString()
+    );
+    if (columnBody) {
+      const time = startDate.toTimeString().split(' ')[0];
+      const position = this.calculePositionTask(time, duration);
+      const task = new TaskBody(position)
+      columnBody.addTask(task);
+    }
+  }
 
   getContainerColumns() {
     return this.containerColumns

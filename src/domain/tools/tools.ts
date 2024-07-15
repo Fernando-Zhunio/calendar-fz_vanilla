@@ -85,3 +85,29 @@ export function getStartDateOfWeek(date: Date, startDay = 1): Date {
   }
   return new Date(date.addDays(startDay - currentDay));
 }
+
+
+// export function calculePositionTask(startTime: string, duration: number): ITaskPosition {
+//   const { startTime: calendarStartTime } = this.getOptions<IViewOptions>()!;
+//   const heightPixelsRow = this.rows[0]
+//     .getElement()!
+//     .getBoundingClientRect().height;
+//   const PxM = this.convertPixelsForMinutes(heightPixelsRow);
+//   const diffMinutes = this.getMinutesDistance(calendarStartTime, startTime);
+
+//   return {
+//     top: diffMinutes * PxM + "px",
+//     height: duration * PxM + "px",
+//   };
+// }
+
+export function getMinutesDistance(startTime: string, endTime: string) {
+  const start = startTime.split(":").map(Number);
+  const end = endTime.split(":").map(Number);
+  return (end[0] - start[0]) * 60 + (end[1] - start[1]);
+}
+
+export function convertPixelsForMinutes(pixels: number, intervalMinutes: number) {
+  // const { intervalMinutes } = this.getOptions<IViewOptions>()!;
+  return pixels / intervalMinutes;
+}
