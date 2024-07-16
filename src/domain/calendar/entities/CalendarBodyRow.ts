@@ -27,8 +27,11 @@ export class CalendarBodyRow extends CalendarRows implements IRow {
 
   private generateEventClick() {
     this.element.addEventListener("click", (e: MouseEvent) => {
+      // debugger;
+      console.log((e.target as any).getBoundingClientRect())
       const position =
         e.clientX - (e.target as any).getBoundingClientRect().left;
+      console.log({position})
       const customEvent = new CustomEvent(TypesCalendarEvent.CalendarRowClick, {
         detail: {
           hour: this.hour,
@@ -42,9 +45,11 @@ export class CalendarBodyRow extends CalendarRows implements IRow {
   }
 
   getColumnForPosition(position: number): number {
-    const widthRow = this.element.clientWidth - this.elementHour.clientWidth;
+    const widthColumnHour = document.querySelector('.calendar__column_hours')!.getBoundingClientRect().width;
+    console.log(this.element.clientWidth, this.element.getBoundingClientRect().width, widthColumnHour)
+    const widthRow = this.element.getBoundingClientRect().width - widthColumnHour;
     const { omitDays } = this.getOptions<IWeekViewOptions>();
-    return Math.floor((position - this.elementHour.clientWidth) / (widthRow / (7 - omitDays!.length))+1);
+    return Math.floor((position - widthColumnHour) / (widthRow / (7 - omitDays!.length))+1);
   }
 
   getHour(): string {

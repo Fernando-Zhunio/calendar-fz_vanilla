@@ -15,12 +15,16 @@ declare global {
 
 const calendar = new CalendarFz('#calendar', {
   //currentDate: new Date('2022-01-01'),
+
 });
 
 calendar.addEventListener(TypesCalendarEvent.CalendarRowClick, (e) => {
   console.log(e)
 })
 
+document.addEventListener('click', (e) => {
+  console.log({client: e.clientX})
+})
 
 setupActionButtons(calendar);
 

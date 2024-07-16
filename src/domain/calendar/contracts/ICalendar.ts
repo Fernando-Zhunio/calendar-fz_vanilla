@@ -9,6 +9,7 @@ export interface IViewOptions {
   intervalMinutes: number;
   startTime: string;
   endTime: string;
+  cbTemplateClickRow?: (data: Date, hour: string) => HTMLElement;
 }
 
 export interface IDayViewOptions extends IViewOptions {

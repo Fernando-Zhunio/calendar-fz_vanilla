@@ -1,19 +1,15 @@
 import { computePosition, flip, shift } from "@floating-ui/dom";
 
 export class Popover {
-  element!: HTMLElement;
-  constructor(private templateId: string) {
-    this.element = document.getElementById(templateId)!;
-    this.element.classList.add('calendar__popover');
-    this.element.classList.add('hidden');
-    this.close();
-  }
-
-  getElement() {
-    return document.getElementById(this.templateId)!;
+  static element: HTMLElement;
+  constructor() {
+    // Popover.element = document.getElementById(templateId)!;
+    Popover.element.classList.add('calendar__popover');
+    Popover.element.classList.add('hidden');
+    // this.close();
   }
   
-  virtualElement(clientX: number, clientY: number) {
+  static virtualElement(clientX: number, clientY: number) {
     return {
       getBoundingClientRect() {
         return {
@@ -30,19 +26,21 @@ export class Popover {
     };
   }
 
-  close() {
-    const element = this.getElement();
+  static close() {
+    const element = Popover.lastElement();
     element.querySelector('button[name=close]')!.addEventListener('click', () => {
       element.classList.add('hidden');
     });
   }
 
-  open(clientX: number, clientY: number) {
-    const template = this.getTemplate();
-    template.classList.remove('hidden');
-    console.log(template.clientWidth);
+  static lastElement() {return this.element;}
+
+  static open(clientX: number, clientY: number, template: HTMLElement) {
+    //const template = this.getTemplate();
+    template.style.display = 'inline-block';
+    Popover.lastElement().appendChild(template);
     computePosition(
-        this.virtualElement(clientX, clientY), 
+        Popover.virtualElement(clientX, clientY), 
         template, {
             strategy: 'fixed',
             middleware: [
@@ -59,10 +57,10 @@ export class Popover {
     );
   }
 
-  getTemplate() {
-    const clone = this.getElement() as HTMLTemplateElement;
-    let header = clone.querySelector("h2")!;
-    header.textContent = "test";
-    return clone;
-  }
+  // getTemplate() {
+  //   const clone = this.getElement() as HTMLTemplateElement;
+  //   let header = clone.querySelector("h2")!;
+  //   header.textContent = "test";
+  //   return clone;
+  // }
 }

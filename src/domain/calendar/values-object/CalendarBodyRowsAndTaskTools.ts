@@ -4,9 +4,9 @@ import { IViewOptions } from "../contracts/ICalendar";
 // import { CalendarBodyColumn } from "../entities/CalendarBodyColumn";
 // import { IView } from "../entities/iview";
 import { CalendarBodyRow } from "../entities/CalendarBodyRow";
-import { ITaskPosition } from "../entities/TaskBody";
+// import { ITaskPosition } from "../entities/TaskBody";
 
-export abstract class CalendarBodyRowsAndTaskTools<O = IViewOptions> extends EventTarget {
+export abstract class CalendarBodyRowsTools<O = IViewOptions> extends EventTarget {
   elementRows = document.createElement("div");
   rows: CalendarBodyRow[] = [];
   // abstract columns: CalendarBodyColumn[]
@@ -40,28 +40,28 @@ export abstract class CalendarBodyRowsAndTaskTools<O = IViewOptions> extends Eve
     this.changeIntervalEffect();
   }
 
-  calculePositionTask(startTime: string, duration: number): ITaskPosition {
-    const { startTime: calendarStartTime } = this.getOptions<IViewOptions>()!;
-    const heightPixelsRow = this.rows[0]
-      .getElement()!
-      .getBoundingClientRect().height;
-    const PxM = this.convertPixelsForMinutes(heightPixelsRow);
-    const diffMinutes = this.getMinutesDistance(calendarStartTime, startTime);
+  // calculePositionTask(startTime: string, duration: number): ITaskPosition {
+  //   const { startTime: calendarStartTime } = this.getOptions<IViewOptions>()!;
+  //   const heightPixelsRow = this.rows[0]
+  //     .getElement()!
+  //     .getBoundingClientRect().height;
+  //   const PxM = this.convertPixelsForMinutes(heightPixelsRow);
+  //   const diffMinutes = this.getMinutesDistance(calendarStartTime, startTime);
 
-    return {
-      top: diffMinutes * PxM + "px",
-      height: duration * PxM + "px",
-    };
-  }
+  //   return {
+  //     top: diffMinutes * PxM + "px",
+  //     height: duration * PxM + "px",
+  //   };
+  // }
 
-  getMinutesDistance(startTime: string, endTime: string) {
-    const start = startTime.split(":").map(Number);
-    const end = endTime.split(":").map(Number);
-    return (end[0] - start[0]) * 60 + (end[1] - start[1]);
-  }
+  // getMinutesDistance(startTime: string, endTime: string) {
+  //   const start = startTime.split(":").map(Number);
+  //   const end = endTime.split(":").map(Number);
+  //   return (end[0] - start[0]) * 60 + (end[1] - start[1]);
+  // }
 
-  convertPixelsForMinutes(pixels: number) {
-    const { intervalMinutes } = this.getOptions<IViewOptions>()!;
-    return pixels / intervalMinutes;
-  }
+  // convertPixelsForMinutes(pixels: number) {
+  //   const { intervalMinutes } = this.getOptions<IViewOptions>()!;
+  //   return pixels / intervalMinutes;
+  // }
 }

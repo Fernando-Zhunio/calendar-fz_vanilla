@@ -1,13 +1,13 @@
 // import { CommunicationService } from "../../../application/CommunicationService";
 // import { listHoursByInterval } from "../../tools/tools";
 import { ICalendarBody, IWeekViewOptions } from "../contracts/ICalendar";
-import { CalendarBodyRowsAndTaskTools } from "../values-object/CalendarBodyRowsAndTaskTools";
-import { CalendarBodyContainerColumnsWeek } from "./CalendarBodyColumnsWeek";
-import { TaskBody } from "./TaskBody";
+import { CalendarBodyRowsTools } from "../values-object/CalendarBodyRowsAndTaskTools";
+import { CalendarBodyContainerColumnsWeek } from "./CalendarBodyContainerColumnsWeek";
+// import { TaskBody } from "./TaskBody";
 // import { CalendarBodyColumn } from "./CalendarBodyColumn";
 
 export class CalendarBodyWeek
-  extends CalendarBodyRowsAndTaskTools<IWeekViewOptions>
+  extends CalendarBodyRowsTools<IWeekViewOptions>
   implements ICalendarBody
 {
   element = document.createElement("div");
@@ -20,7 +20,7 @@ export class CalendarBodyWeek
   }
 
   init() {
-    this.containerColumns = new CalendarBodyContainerColumnsWeek(this.element);
+    this.containerColumns = new CalendarBodyContainerColumnsWeek(this.calendarId, this.element);
     this.assignClassCss();
     this.element.append(this.elementRows);
     this.buildRows();
@@ -42,10 +42,12 @@ export class CalendarBodyWeek
         startDate.toLocaleDateString()
     );
     if (columnBody) {
-      const time = startDate.toTimeString().split(' ')[0];
-      const position = this.calculePositionTask(time, duration);
-      const task = new TaskBody(position)
-      columnBody.addTask(task);
+      const heightPixelRow = this.rows[0].getElement().getBoundingClientRect().height
+      columnBody.addTask(startDate, duration, heightPixelRow);
+      // const time = startDate.toTimeString().split(' ')[0];
+      // const position = this.calculePositionTask(time, duration);
+      // const task = new TaskBody(position)
+      // columnBody.addTask(task);
     }
   }
 

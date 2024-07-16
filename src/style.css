@@ -33,9 +33,11 @@
   pointer-events: none;
 }
 
-.calendar__body_container_columns_week div {
+.calendar__body_container_columns_week > div {
   border-right: 1px solid #dadada;
+  position: relative;
 }
+
 .calendar__body_week_rows {
   z-index: 1;
   position: relative;
@@ -115,11 +117,6 @@
   height: var(--height-row-week);
 }
 
-.calendar__body_week_columns__column {
-  border-left: 1px solid #dadada;
-  position: relative;
-  pointer-events: none;
-}
 
 .calendar__body_task {
   position: absolute;

@@ -2,19 +2,19 @@ import { CalendarElement } from "../values-object/CalendarElement";
 import { CalendarBodyColumn } from "./CalendarBodyColumn";
 
 export class CalendarBodyContainerColumnsWeek extends CalendarElement {
-  //element = document.createElement("div");
 
   columns: CalendarBodyColumn[] = [];
-  constructor(protected parent: HTMLElement) {
+  constructor(protected calendarId: symbol, protected parent: HTMLElement) {
     super(parent)
     this.init();
     this.assignClassCss();
   }
 
   init() {
-    // este div es para la hora
-    this.element.append(document.createElement("div"));
-    //parent.append(this.element);
+    // este div es para la columna de la hora
+    const element = document.createElement("div");
+    element.classList.add("calendar__column_hours");
+    this.element.append(element);
   }
 
   assignClassCss() {
@@ -22,7 +22,7 @@ export class CalendarBodyContainerColumnsWeek extends CalendarElement {
   }
 
   addColumn(date: Date) {
-    const column = new CalendarBodyColumn(date, this.element);
+    const column = new CalendarBodyColumn(this.calendarId, date, this.element);
     this.columns.push(column);
     return column;
   }

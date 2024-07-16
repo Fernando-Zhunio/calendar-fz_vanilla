@@ -11,6 +11,7 @@ export class CalendarFz {
   private id = Symbol("CalendarFz");
   typeView: TypesView = TypesView.weeks;
   private options!: IWeekViewOptions | IDayViewOptions;
+  // popo
 
   constructor(
     querySelector: string,
@@ -28,6 +29,16 @@ export class CalendarFz {
 
   addEventListener(typesCalendarEvent:TypesCalendarEvent, callback: (e: any) => void) {
     document.addEventListener(typesCalendarEvent, (e: any) => callback(e.detail));
+  }
+
+  popupClickRow(clientX: number, clientY: number, date: Date, hour: string) {
+    const {cbTemplateClickRow} = this.getOptions();
+    if (!cbTemplateClickRow || typeof cbTemplateClickRow !== "function") {
+      return;
+    }
+
+    const template = cbTemplateClickRow(date, hour);
+    Pop
   }
 
   assignClassCss() {
@@ -77,7 +88,7 @@ export class CalendarFz {
     this.view.changeInterval(interval);
   }
 
-  addTask(day: number, dateTime: Date, duration: number, template: HTMLElement | string) {
+  addTask(dateTime: Date, duration: number, template: HTMLElement | string) {
     // CommunicationService.getInstance()
     // .addTask(this.id, day, dateTime, duration, template);
     this.view.addTask(dateTime, duration);
