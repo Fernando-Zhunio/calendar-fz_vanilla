@@ -1,4 +1,5 @@
 import { CommunicationService } from "../../../application/CommunicationService";
+import { Popover } from "../../popover/Popover";
 import { TypesView } from "../../tools/tools";
 import { IDayViewOptions, IWeekViewOptions, defaultWeekViewOptions, defaultDayViewOptions } from "../contracts/ICalendar";
 import { TypesCalendarEvent } from "../contracts/IEventsCalendar";
@@ -21,14 +22,22 @@ export class CalendarFz {
     if (!this.element) {
       throw new Error("Element not found");
     }
-    CommunicationService.getInstance().registerCalendar(this.id, this);
+    CommunicationService.registerCalendar(this.id, this);
     this.changeView(TypesView.weeks, options);
 
     this.assignClassCss();
+    Popover.init();
+    this.addEventListener(TypesCalendarEvent.CalendarRowClick, (e) => {
+      console.log(e.event.clientX, e.event.clientY, e.date, e.hour);
+      this.popupClickRow(e.event.clientX, e.event.clientY, e.date, e.hour);
+    })
   }
 
   addEventListener(typesCalendarEvent:TypesCalendarEvent, callback: (e: any) => void) {
     document.addEventListener(typesCalendarEvent, (e: any) => callback(e.detail));
+    if (typesCalendarEvent === TypesCalendarEvent.CalendarRowClick) {
+
+    }
   }
 
   popupClickRow(clientX: number, clientY: number, date: Date, hour: string) {
@@ -38,7 +47,7 @@ export class CalendarFz {
     }
 
     const template = cbTemplateClickRow(date, hour);
-    Pop
+    Popover.open(clientX, clientY, template);
   }
 
   assignClassCss() {
@@ -88,9 +97,11 @@ export class CalendarFz {
     this.view.changeInterval(interval);
   }
 
+  getView() {
+    return this.view;
+  }
+
   addTask(dateTime: Date, duration: number, template: HTMLElement | string) {
-    // CommunicationService.getInstance()
-    // .addTask(this.id, day, dateTime, duration, template);
     this.view.addTask(dateTime, duration);
   }
 

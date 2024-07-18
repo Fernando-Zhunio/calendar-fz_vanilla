@@ -22,7 +22,7 @@ export class DescriptionHead {
     }
 
     update() {
-        const {currentDate} = CommunicationService.getInstance().getOptions(this.id)!
+        const {currentDate} = CommunicationService.getOptions(this.id)!
         this.setTextYear('/'+currentDate.getFullYear().toString())
         this.setTextMonth(getLabelMonths(currentDate.getMonth()))
     }

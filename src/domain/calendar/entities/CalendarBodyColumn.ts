@@ -21,7 +21,6 @@ export class CalendarBodyColumn extends CalendarElement {
   }
 
   addTask(startDate: Date, duration: number, heightPixelsRow: number) {
-      debugger
     const position = this.calculePositionTask(
       startDate,
       duration,
@@ -62,9 +61,6 @@ export class CalendarBodyColumn extends CalendarElement {
     heightPixelsRow: number
   ): ITaskPosition {
     const { startTime: calendarStartTime } = this.getOptions<IViewOptions>()!;
-    // const heightPixelsRow = this.rows[0]
-    //   .getElement()!
-    //   .getBoundingClientRect().height;
     const startTime = new Date(startDate).toTimeString().split(" ")[0];
     const PxM = this.convertPixelsForMinutes(heightPixelsRow);
     const diffMinutes = this.getMinutesDistance(calendarStartTime, startTime);
@@ -87,6 +83,6 @@ export class CalendarBodyColumn extends CalendarElement {
   }
 
   getOptions<T>() {
-    return CommunicationService.getInstance().getOptions(this.calendarId) as T;
+    return CommunicationService.getOptions(this.calendarId) as T;
   }
 }

@@ -16,12 +16,12 @@ export abstract class CalendarView {
 //     });
 //   }
 
-  public next(): void {
-    this.getHeader().next();
-  }
+  // public next(): void {
+  //   this.getHeader().next();
+  // }
 
-  public previous(): void {
-    this.getHeader().previous();
-  }
+  // public previous(): void {
+  //   this.getHeader().previous();
+  // }
 
 }

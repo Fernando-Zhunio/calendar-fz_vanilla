@@ -1,4 +1,4 @@
-.calendar__popover {
+/* .calendar__popover {
     position: fixed;
     z-index: 10;
     display: flex;
@@ -18,6 +18,28 @@
 }
 
 .calendar__popover.animation {
-    /* animation: 0.5s ease-out forwards popoverAnimation; */
     transition: all 0.5s ease-out;
+} */
+
+.calendar__popover {
+  position: absolute;
+  z-index: 10;
+  background-color: white;
+  padding: 10px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
+  max-width: 100%;
+  transition: width 0.5s;
+}
+
+.calendar__btn-close {
+    position: absolute;
+    top: -10px;
+    right: 1px;
+    cursor: pointer;
+    width: 25px;
+    height: 25px;
+    background: transparent;
+    border: none;
+    fill: red;
 }

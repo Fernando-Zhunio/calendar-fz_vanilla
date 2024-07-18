@@ -8,7 +8,7 @@ export class CalendarHeader extends CalendarElement {
         super(parent);
     }
     getOptions<T= IViewOptions>() {
-        return CommunicationService.getInstance().getOptions(
+        return CommunicationService.getOptions(
             this.calendarId
           )! as T;
     }

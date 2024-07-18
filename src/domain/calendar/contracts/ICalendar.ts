@@ -1,3 +1,5 @@
+import { CalendarBodyColumn } from "../entities/CalendarBodyColumn";
+
 export interface IWeekViewOptions extends IViewOptions {
   omitDays?: number[];
   startDay: 1 | 2 | 3 | 4 | 5 | 6 | 7;
@@ -38,7 +40,7 @@ export interface IHeaderCalendar {
 }
 
 export interface ICalendarBody {
-  // addTask(column: number, dateTime: Date, duration: number, template: HTMLElement | string): void;
+  getColumns(): CalendarBodyColumn[];
 }
 
 export interface ICalendarDataWeek extends ICalendarData {

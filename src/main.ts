@@ -14,9 +14,27 @@ declare global {
 }
 
 const calendar = new CalendarFz('#calendar', {
-  //currentDate: new Date('2022-01-01'),
-
+  cbTemplateClickRow: (date: Date, hour: string) => {
+    return templateClickRow(date, hour)
+  }
 });
+
+function templateClickRow(date:Date, hour: string) {
+  const element = document.createElement('div');
+  element.textContent = 'fernando' + date.toLocaleDateString() + ' ' + hour;
+  return element
+}
+
+function buildFormAddTask() {
+  const form = document.createElement('form');
+  /*
+  ```ts
+  */
+  const stringTemplate = `
+  <div>
+  </div>
+  `
+}
 
 calendar.addEventListener(TypesCalendarEvent.CalendarRowClick, (e) => {
   console.log(e)

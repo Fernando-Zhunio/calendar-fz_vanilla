@@ -23,7 +23,7 @@ export class CalendarRows extends CalendarElement {
       }
 
     getOptions<T = IViewOptions>() {
-        return CommunicationService.getInstance().getOptions(
+        return CommunicationService.getOptions(
           this.calendarId
         ) as T;
 

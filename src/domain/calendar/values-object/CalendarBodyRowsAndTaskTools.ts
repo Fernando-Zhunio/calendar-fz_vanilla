@@ -15,7 +15,7 @@ export abstract class CalendarBodyRowsTools<O = IViewOptions> extends EventTarge
   }
   protected abstract changeIntervalEffect(): void;
   getOptions<T = O>() {
-    return CommunicationService.getInstance().getOptions(this.calendarId) as T;
+    return CommunicationService.getOptions(this.calendarId) as T;
   }
 
   getRows() {

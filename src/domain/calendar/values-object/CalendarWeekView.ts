@@ -57,11 +57,11 @@ export class CalendarWeekView implements ICalendarView {
   }
 
   getCalendar(): CalendarFz {
-    return CommunicationService.getInstance().getCalendar(this.calendarId)!;
+    return CommunicationService.getCalendarForId(this.calendarId)!;
   }
 
   getOptions() {
-    return CommunicationService.getInstance().getOptions(
+    return CommunicationService.getOptions(
       this.calendarId
     )! as IWeekViewOptions;
   }

@@ -26,6 +26,10 @@ export class CalendarBodyWeek
     this.buildRows();
   }
 
+  getColumns() {
+    return this.containerColumns.columns;
+  }
+
   private assignClassCss() {
     this.element.classList.add("calendar__body_week");
     this.elementRows.classList.add("calendar__body_week_rows");
