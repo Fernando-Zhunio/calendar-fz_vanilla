@@ -13,7 +13,7 @@ export class CalendarHeaderWeek extends CalendarHeader implements IHeaderCalenda
   // sprintDays = 7;
   // firstDate!: Date;
   // endDate!: Date;
-  constructor(protected calendarId: symbol, protected parent: HTMLElement) {
+  constructor(protected calendarId: string, protected parent: HTMLElement) {
     super(calendarId, parent);
     this.init();
     this.assignClassCss();

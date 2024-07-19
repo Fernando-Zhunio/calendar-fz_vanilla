@@ -1,0 +1,22 @@
+.calendar-form-add-task div {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    margin-bottom: 10px;
+}
+
+.calendar-form-add-task div input {
+    padding: 5px;
+    border: 1px solid #dadada;
+    border-radius: 5px;
+    outline: none;
+}
+
+.calendar-form-add-task {
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
+    max-width: 100%;
+    transition: width 0.5s;
+}

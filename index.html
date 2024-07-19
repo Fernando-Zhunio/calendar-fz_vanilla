@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Vite + TS</title>
     <link rel="stylesheet" href="src/styles-popover.css">
+    <link rel="stylesheet" href="src/styles-user.css">
     <style>
       #form-template #form-calendar-task-add {
         background: white;
@@ -34,33 +35,22 @@
     </div>
     <div id="calendar"></div>
 
-    <div id="form-template" class="hidden">
-      <div id="form-calendar-task-add" class="popover">
-        <div class="popover__header">
-          <h2 name="header">Hola este es un ejemplo</h2>
-          <button name="close">X</button>
-        </div>
-        <div class="popover__body">
-          <section name="body">
-            <form action="">
-              <div>
-                <label for="name">Nombre de la tarea</label>
-                <input id="name" type="text" name="name">
-              </div>
-              <div>
-                <label for="name">Fecha y Hora de Inicio</label>
-                <input id="date" type="datetime-local" name="date">
-              </div>
-              <div>
-                <label for="name">Duración (Minutos)</label>
-                <input id="duration" type="number" name="duration">
-              </div>
-            </form>
-            <button id="save-task">Guardar evento</button>
-          </section>
-        </div>
+    <form id="form-template" class="calendar-form-add-task">
+      <div>
+        <label for="name">Nombre de la tarea</label>
+        <input id="name" type="text" name="name">
       </div>
-    </div>
+      <div>
+        <label for="name">Fecha y Hora de Inicio</label>
+        <input id="datetime" type="datetime-local" name="date">
+      </div>
+      <div>
+        <label for="name">Duración (Minutos)</label>
+        <input id="duration" type="number" name="duration">
+      </div>
+      <button id="save-task">Guardar evento</button>
+    </form>
+
     <script type="module" src="/src/main.ts"></script>
   </body>
 </html>

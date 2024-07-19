@@ -1,4 +1,3 @@
-import { IColumn } from "../calendar/contracts/IColumn";
 
 export enum TypesView {
   days = "days",
@@ -110,4 +109,8 @@ export function getMinutesDistance(startTime: string, endTime: string) {
 export function convertPixelsForMinutes(pixels: number, intervalMinutes: number) {
   // const { intervalMinutes } = this.getOptions<IViewOptions>()!;
   return pixels / intervalMinutes;
+}
+
+export function generateUuid() {
+  return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
 }

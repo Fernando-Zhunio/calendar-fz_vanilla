@@ -1,4 +1,6 @@
 import { CalendarBodyColumn } from "../entities/CalendarBodyColumn";
+import { CalendarBodyRow } from "../entities/CalendarBodyRow";
+import { CalendarTask } from "../entities/Task/CalendarTask";
 
 export interface IWeekViewOptions extends IViewOptions {
   omitDays?: number[];
@@ -11,7 +13,7 @@ export interface IViewOptions {
   intervalMinutes: number;
   startTime: string;
   endTime: string;
-  cbTemplateClickRow?: (data: Date, hour: string) => HTMLElement;
+  querySelectorRowClick: string;
 }
 
 export interface IDayViewOptions extends IViewOptions {
@@ -32,6 +34,7 @@ export const defaultWeekViewOptions: IWeekViewOptions = {
   omitDays: [],
   startDay: 1,
   sprintDays: 7,
+  querySelectorRowClick: "",
 };
 
 export interface IHeaderCalendar {
@@ -41,6 +44,9 @@ export interface IHeaderCalendar {
 
 export interface ICalendarBody {
   getColumns(): CalendarBodyColumn[];
+  getTaskForId(id: any): CalendarTask;
+  getRows(): CalendarBodyRow[];
+  getHeightRow(): number;
 }
 
 export interface ICalendarDataWeek extends ICalendarData {

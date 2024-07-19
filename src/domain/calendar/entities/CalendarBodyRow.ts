@@ -10,7 +10,7 @@ export class CalendarBodyRow extends CalendarRows implements IRow {
   constructor(
     protected parent: HTMLElement,
     protected hour: string,
-    protected calendarId: symbol
+    protected calendarId: string
   ) {
     super(calendarId, parent);
     this.generateEventClick();

@@ -7,6 +7,7 @@ import { CalendarFz } from "../entities/CalendarFz";
 import { CalendarHeaderColumn } from "../entities/CalendarHeaderColumn";
 import { CalendarHeaderWeek } from "../entities/CalendarHeaderWeek";
 import { IView as ICalendarView } from "../entities/iview";
+import { CalendarTask } from "../entities/Task/CalendarTask";
 
 export class CalendarWeekView implements ICalendarView {
   currentDate = new Date();
@@ -24,7 +25,7 @@ export class CalendarWeekView implements ICalendarView {
     columnBody: CalendarBodyColumn;
   }[] = [];
 
-  constructor(private calendarId: symbol, parentElement: HTMLElement) {
+  constructor(private calendarId: string, parentElement: HTMLElement) {
     this.init(parentElement);
   }
 
@@ -98,15 +99,7 @@ export class CalendarWeekView implements ICalendarView {
     return this.data;
   }
 
-  addTask(startDate: Date, duration: number) {
-    this.body.addTask(startDate, duration);
-    // const columnBody = this.body.getContainerColumns().columns.find(
-    //   (x) =>
-    //     x.getDate().toLocaleDateString() ===
-    //     startDate.toLocaleDateString()
-    // );
-
-    // columnBody?.columnBody.addTask(startDate, duration);
-    // console.log({columnBody});
+  addTask(task: CalendarTask) {
+    this.body.addTask(task);
   }
 }

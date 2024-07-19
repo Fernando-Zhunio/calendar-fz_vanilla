@@ -5,43 +5,32 @@ export class CommunicationService {
     // private static instance: CommunicationService;
     private constructor() {}
 
-    private static store = new Map<Symbol, CalendarFz>();
-    static registerCalendar(key: Symbol, calender: CalendarFz) {
-        this.store.set(key, calender);
+    private static store = new Map<string, CalendarFz>();
+    static registerCalendar(calendarId: string, calender: CalendarFz) {
+        this.store.set(calendarId, calender);
     }
 
-    static getCalendarForId(key: Symbol) {
-        return CommunicationService.store.get(key);
+    static getCalendarForId(calendarId: string) {
+        return CommunicationService.store.get(calendarId);
     }
 
 
 
-    getCalendar(key: Symbol) {
-        return CommunicationService.store.get(key);
+    getCalendar(calendarId: string) {
+        return CommunicationService.store.get(calendarId);
     }
 
-    getColumnByIndex(calendarId: Symbol, index: number) {
+    getColumnByIndex(calendarId: string, index: number) {
         return this.getCalendar(calendarId)?.view.getBody().getColumns()[index];
     }
 
-    // addTask(key: Symbol, column: number, dateTime: Date, duration: number, template: HTMLElement | string) {
-    //     this.getCalendar(key)?.view.getBody().addTask(column, dateTime, duration, template);
-    // }
-
-    static getOptions(key: Symbol): IWeekViewOptions | IDayViewOptions | undefined {
-        if(!this.store.get(key)) return;
-        return this.store.get(key)!.getOptions();
+    static getOptions(calendarId: string): IWeekViewOptions | IDayViewOptions | undefined {
+        if(!this.store.get(calendarId)) return;
+        return this.store.get(calendarId)!.getOptions();
     }
 
-    static getData(key: Symbol) {
-        if(!this.store.get(key)) return;
-        return this.store.get(key)!.getData();
+    static getData(calendarId: string) {
+        if(!this.store.get(calendarId)) return;
+        return this.store.get(calendarId)!.getData();
     }
-
-    // public static getInstance(): CommunicationService {
-    //     if (!CommunicationService.instance) {
-    //         CommunicationService.instance = new CommunicationService();
-    //     }
-    //     return CommunicationService.instance;
-    // }
 }

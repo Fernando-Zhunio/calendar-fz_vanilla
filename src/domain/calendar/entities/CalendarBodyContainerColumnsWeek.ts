@@ -4,7 +4,7 @@ import { CalendarBodyColumn } from "./CalendarBodyColumn";
 export class CalendarBodyContainerColumnsWeek extends CalendarElement {
 
   columns: CalendarBodyColumn[] = [];
-  constructor(protected calendarId: symbol, protected parent: HTMLElement) {
+  constructor(protected calendarId: string, protected parent: HTMLElement) {
     super(parent)
     this.init();
     this.assignClassCss();

@@ -3,6 +3,7 @@
 import { ICalendarBody, IWeekViewOptions } from "../contracts/ICalendar";
 import { CalendarBodyRowsTools } from "../values-object/CalendarBodyRowsAndTaskTools";
 import { CalendarBodyContainerColumnsWeek } from "./CalendarBodyContainerColumnsWeek";
+import { CalendarTask } from "./Task/CalendarTask";
 // import { TaskBody } from "./TaskBody";
 // import { CalendarBodyColumn } from "./CalendarBodyColumn";
 
@@ -11,9 +12,9 @@ export class CalendarBodyWeek
   implements ICalendarBody
 {
   element = document.createElement("div");
-  containerColumns!: CalendarBodyContainerColumnsWeek
-  //columns: CalendarBodyColumn[] = [];
-  constructor(protected calendarId: symbol) {
+  containerColumns!: CalendarBodyContainerColumnsWeek;
+  taskList: CalendarTask[] = [];
+  constructor(protected calendarId: string) {
     super(calendarId);
     this.init();
     this.assignClassCss();
@@ -39,20 +40,21 @@ export class CalendarBodyWeek
     return this.element;
   }
 
-  addTask(startDate: Date, duration: number) {
+  addTask(task: CalendarTask) {
     const columnBody = this.containerColumns.columns.find(
       (x) =>
         x.getDate().toLocaleDateString() ===
-        startDate.toLocaleDateString()
+        task.getDate().toLocaleDateString()
     );
     if (columnBody) {
-      const heightPixelRow = this.rows[0].getElement().getBoundingClientRect().height
-      columnBody.addTask(startDate, duration, heightPixelRow);
-      // const time = startDate.toTimeString().split(' ')[0];
-      // const position = this.calculePositionTask(time, duration);
-      // const task = new TaskBody(position)
-      // columnBody.addTask(task);
+      const heightPixelRow = this.getHeightRow();
+      columnBody.addTask(task, heightPixelRow);
+      this.taskList.push(task);
     }
+  }
+
+  getHeightRow() {
+    return this.rows[0].getElement().getBoundingClientRect().height
   }
 
   getContainerColumns() {
@@ -95,11 +97,11 @@ export class CalendarBodyWeek
     return true;
   }
 
-  // getColumnByKey(day: number) {
-  //   return this.columns.find((column) => column.getKey() === day)!;
-  // }
-
   changeIntervalEffect() {
     this.dispatchEvent(new Event('update-task'));
+  }
+
+  getTaskForId(id: string) {
+    return this.taskList.find((task) => task.getId() === id)!;
   }
 }

@@ -1,53 +1,60 @@
 import { CommunicationService } from "../../../application/CommunicationService";
 import { Popover } from "../../popover/Popover";
-import { TypesView } from "../../tools/tools";
+import { PopoverContent } from "../../popover/PopoverContent";
+import { generateUuid, TypesView } from "../../tools/tools";
 import { IDayViewOptions, IWeekViewOptions, defaultWeekViewOptions, defaultDayViewOptions } from "../contracts/ICalendar";
 import { TypesCalendarEvent } from "../contracts/IEventsCalendar";
+import { CalendarTaskMovement } from "../values-object/CalendarTaskMovement";
 import { CalendarWeekView } from "../values-object/CalendarWeekView";
 import { IView } from "./iview";
+import { CalendarTask } from "./Task/CalendarTask";
 
-export class CalendarFz {
+export abstract class CalendarFz extends CalendarTaskMovement {
   view!: IView;
-  private element: HTMLElement;
-  private id = Symbol("CalendarFz");
   typeView: TypesView = TypesView.weeks;
+  contentClickRow!: PopoverContent;
+  private element: HTMLElement;
   private options!: IWeekViewOptions | IDayViewOptions;
-  // popo
+  private calendarId = generateUuid();
 
   constructor(
     querySelector: string,
     options?: Partial<IWeekViewOptions | IDayViewOptions>
   ) {
+    super();
     this.element = document.querySelector(querySelector)!;
     if (!this.element) {
       throw new Error("Element not found");
     }
-    CommunicationService.registerCalendar(this.id, this);
+    this.element.setAttribute("calendar-id", this.calendarId);
+    CommunicationService.registerCalendar(this.calendarId, this);
     this.changeView(TypesView.weeks, options);
-
     this.assignClassCss();
     Popover.init();
-    this.addEventListener(TypesCalendarEvent.CalendarRowClick, (e) => {
-      console.log(e.event.clientX, e.event.clientY, e.date, e.hour);
-      this.popupClickRow(e.event.clientX, e.event.clientY, e.date, e.hour);
-    })
+    if (options?.querySelectorRowClick) {
+      this.setEnabledPopupInput(true, options?.querySelectorRowClick)
+    }
+  }
+
+  setEnabledPopupInput(enabled: boolean, querySelectorRowClick?: string) {
+    if (enabled && querySelectorRowClick) {
+      this.options.querySelectorRowClick = querySelectorRowClick;
+      this.contentClickRow = new PopoverContent(querySelectorRowClick);
+      document.addEventListener(TypesCalendarEvent.CalendarRowClick, this.cbPopupClickRow.bind(this));
+    } else {
+      this.options.querySelectorRowClick = "";
+      document.removeEventListener(TypesCalendarEvent.CalendarRowClick, this.cbPopupClickRow.bind(this));
+    }
+  }
+
+  
+
+  cbPopupClickRow(e: any) {
+    Popover.open(e.detail.event.clientX, e.detail.event.clientY, this.contentClickRow);
   }
 
   addEventListener(typesCalendarEvent:TypesCalendarEvent, callback: (e: any) => void) {
     document.addEventListener(typesCalendarEvent, (e: any) => callback(e.detail));
-    if (typesCalendarEvent === TypesCalendarEvent.CalendarRowClick) {
-
-    }
-  }
-
-  popupClickRow(clientX: number, clientY: number, date: Date, hour: string) {
-    const {cbTemplateClickRow} = this.getOptions();
-    if (!cbTemplateClickRow || typeof cbTemplateClickRow !== "function") {
-      return;
-    }
-
-    const template = cbTemplateClickRow(date, hour);
-    Popover.open(clientX, clientY, template);
   }
 
   assignClassCss() {
@@ -71,7 +78,7 @@ export class CalendarFz {
           ...defaultWeekViewOptions,
           ...(options as IWeekViewOptions),
         };
-        this.view = new CalendarWeekView(this.id, this.element);
+        this.view = new CalendarWeekView(this.calendarId, this.element);
         break;
 
       default:
@@ -101,12 +108,16 @@ export class CalendarFz {
     return this.view;
   }
 
-  addTask(dateTime: Date, duration: number, template: HTMLElement | string) {
-    this.view.addTask(dateTime, duration);
+  addTask(task: CalendarTask) {
+    this.view.addTask(task);
   }
 
   getData() {
     this.view.getData();
+  }
+
+  closePopup() {
+    Popover.close();
   }
 }
 

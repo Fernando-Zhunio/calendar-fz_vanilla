@@ -20,7 +20,6 @@
 }
 
 .calendar__body_week {
-  /* border: solid 1px black; */
   position: relative;
 }
 .calendar__body_container_columns_week {
@@ -70,7 +69,6 @@
 }
 
 .calendar-text-truncate {
-  /* width: 250px; */
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -81,12 +79,8 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  /* gap: 5px; */
-  /* padding-inline: 8px; */
-  /* font-size: 1.2rem; */
 }
 
-/* generte var */
 :root {
   --height-row-week: 36px;
   --width-label-hours: 60px;
@@ -117,15 +111,14 @@
   height: var(--height-row-week);
 }
 
-
 .calendar__body_task {
   position: absolute;
   width: 100%;
-  height: 100%;
+  /* height: 100%; */
   top: 0;
   left: 0;
   z-index: 1;
   pointer-events: all;
   background-color: rgba(127, 255, 212, 0.745);
+  transition: height 0.5s;
 }
-

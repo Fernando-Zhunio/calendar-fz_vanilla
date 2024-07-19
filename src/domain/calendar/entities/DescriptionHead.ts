@@ -6,7 +6,7 @@ export class DescriptionHead {
     elementMonth = document.createElement("strong")
     elementDescription = document.createElement("div")
     elementContentDescription = document.createElement("small")
-    constructor(private id: symbol) {
+    constructor(private calendarId: string) {
         this.elementDescription.classList.add("calendar__description")
         this.elementDescription.append(this.elementContentDescription)
         this.elementContentDescription.classList.add("calendar-text-truncate")
@@ -22,10 +22,10 @@ export class DescriptionHead {
     }
 
     update() {
-        const {currentDate} = CommunicationService.getOptions(this.id)!
+        const {currentDate} = CommunicationService.getOptions(this.calendarId)!
         this.setTextYear('/'+currentDate.getFullYear().toString())
         this.setTextMonth(getLabelMonths(currentDate.getMonth()))
-    }
+    } 
 
     setTextYear(text: string) {
         this.elementYear.textContent = text

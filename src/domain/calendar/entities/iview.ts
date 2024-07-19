@@ -1,4 +1,5 @@
 import { ICalendarBody, ICalendarDataWeek } from "../contracts/ICalendar"
+import { CalendarTask } from "./Task/CalendarTask"
 
 export interface IView {
    // render(element: HTMLElement): void
@@ -7,5 +8,5 @@ export interface IView {
     changeInterval(interval: number): void
     getBody(): ICalendarBody
     getData(): ICalendarDataWeek 
-    addTask(startDate: Date, duration: number): void    
+    addTask(task: CalendarTask): void    
 }

@@ -1,12 +1,13 @@
 import { CommunicationService } from "../../../application/CommunicationService";
+import { generateUuid } from "../../tools/tools";
 import { IViewOptions } from "../contracts/ICalendar";
 import { CalendarElement } from "../values-object/CalendarElement";
-import { ITaskPosition, TaskBody } from "./TaskBody";
+import { ITaskPosition, CalendarTask } from "./Task/CalendarTask";
 
 export class CalendarBodyColumn extends CalendarElement {
-  taskList = new Map<any, TaskBody>();
+  taskList = new Map<any, CalendarTask>();
   date!: Date;
-  constructor(protected calendarId: symbol, date: Date, parent: HTMLElement) {
+  constructor(protected calendarId: string, date: Date, parent: HTMLElement) {
     super(parent);
     this.init(date);
     this.getElement().setAttribute("data-date", this.date.toLocaleDateString());
@@ -20,14 +21,17 @@ export class CalendarBodyColumn extends CalendarElement {
     this.element.classList.add("calendar__body_week_columns__column");
   }
 
-  addTask(startDate: Date, duration: number, heightPixelsRow: number) {
+  addTask(task: CalendarTask, heightPixelsRow: number) {
     const position = this.calculePositionTask(
-      startDate,
-      duration,
+      task.getDate(),
+      task.getDuration(),
       heightPixelsRow
     );
-    const task = new TaskBody(position);
+
+    task.setPosition(position);
     this.element.append(task.getElement());
+    task.getElement().setAttribute("calendar-id", this.calendarId);
+    task.setTaskId(generateUuid());
     this.taskList.set(task.getId(), task);
   }
 
