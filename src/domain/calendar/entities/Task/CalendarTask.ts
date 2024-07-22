@@ -1,3 +1,5 @@
+import { CalendarTaskDuration } from "./CalendarTaskDuration";
+
 export interface ITaskPosition {
     top?: string
     left?: string
@@ -16,9 +18,12 @@ export class CalendarTask {
         height: '0px',
         width: '100%'
     }
-    constructor(protected date: Date, protected duration: number) {
+
+    taskDuration!: CalendarTaskDuration
+    constructor(protected date: Date, duration: number) {
         this.element.classList.add('calendar__body_task');
         Object.assign(this.element.style, this.position);
+        this.taskDuration = new CalendarTaskDuration(duration, this.element)
     }
 
     getDate() {
@@ -26,11 +31,11 @@ export class CalendarTask {
     }
 
     getDuration() {
-        return this.duration
+        return this.taskDuration.getDuration();
     }
 
     setDuration(duration: number) {
-        this.duration = duration
+        this.taskDuration.setDuration(duration) 
         return this
     }
 
@@ -64,8 +69,7 @@ export class CalendarTask {
 
     setHeight(height: string, minutes: number) {
         this.position.height = height
-        this.duration+=minutes;
+        this.setDuration(this.getDuration() + minutes)
         this.element.style.height = height
-       // Object.assign(this.element.style, this.position)    
     }
 }

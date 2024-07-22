@@ -120,5 +120,5 @@
   z-index: 1;
   pointer-events: all;
   background-color: rgba(127, 255, 212, 0.745);
-  transition: height 0.5s;
+  /* transition: height 0.1s; */
 }

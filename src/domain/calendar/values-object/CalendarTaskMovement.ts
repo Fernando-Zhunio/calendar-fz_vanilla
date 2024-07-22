@@ -1,21 +1,27 @@
-import { CommunicationService } from "../../../application/CommunicationService";
+import { CalendarFz } from "../entities/CalendarFz";
 // import { CalendarFz } from "../entities/CalendarFz";
 import { CalendarTask } from "../entities/Task/CalendarTask";
 
 export class CalendarTaskMovement {
   task!: CalendarTask | null;
-  calendar!: CalendarFz | null;
+  //calendar!: CalendarFz | null;
   isMovement: boolean = false;
-  lastY = 0;
+  // lastY = 0;
   pxm = 0;
+  incrementHeightInterval: number = 5;
+  //currentHeight: number = 0;
+  currentElement!: HTMLElement;
+  originalHeight: number = 0;
+  originalY: number = 0;
+  originalMouseY: number = 0;
+  minimumSize: number = 20;
 
   constructor(protected calendar: CalendarFz) {
     this.listenersInit();
   }
   listenersInit() {
     document.addEventListener("mousedown", this.cbMouseDown.bind(this));
-    document.addEventListener("mousemove", this.cbMouseMove.bind(this));
-    document.addEventListener("mouseup", this.cbMouseUp.bind(this));
+    // document.addEventListener("mouseup", this.cbMouseUp.bind(this));
   }
 
   getAttributes(target: HTMLElement, attr: string) {
@@ -25,40 +31,35 @@ export class CalendarTaskMovement {
   cbMouseDown(e: MouseEvent) {
     const target = e.target as HTMLElement;
     if (target.classList.contains("calendar__body_task")) {
-        this.isMovement = true;
-        console.log('isMovement', this.isMovement)
-      this.pxm = this.convertPixelsForMinutes()
-      this.calendar = CommunicationService.getCalendarForId(
-        this.getAttributes(target, "calendar-id")
-      )!;
+      this.isMovement = true;
+      this.pxm = this.convertPixelsForMinutes();
       this.task = this.calendar?.view
         .getBody()
         .getTaskForId(this.getAttributes(target, "task-id"))!;
+      this.currentElement = this.task?.getElement();
+      this.originalHeight = this.currentElement.getBoundingClientRect().height!;
+      this.originalMouseY = e.pageY;
+
+      window.addEventListener("mousemove", this.cbMouseMove.bind(this));
+      window.addEventListener("mouseup", this.cbMouseUp.bind(this));
+    }
+  }
+  resize(e: any) {
+    const offset = e.pageY - this.originalMouseY;
+    if (offset%this.pxm != 0) {
+      return;
+    }
+    const height = this.originalHeight + (e.pageY - this.originalMouseY);
+    if (height > this.minimumSize) {
+      this.task?.setHeight(height + "px", offset > 0 ? this.incrementHeightInterval : -this.incrementHeightInterval);
     }
   }
 
+
+
   cbMouseMove(e: MouseEvent) {
     if (this.isMovement) {
-        const currentY = e.clientY; // Posición vertical actual del ratón
-
-        if (this.lastY !== 0) { // Asegúrate de que no se ejecute en el primer movimiento
-            const deltaY = currentY - this.lastY; // Diferencia en la posición vertical
-
-            // Solo ajusta la altura si el ratón se mueve verticalmente hacia arriba o abajo
-            if (Math.abs(deltaY) > 0) {
-                // Calcula el nuevo tamaño en pasos de 15px
-                // const stepSize = 5;
-                const currentHeight = this.task?.getElement().getBoundingClientRect().height!//parseInt(window.getComputedStyle(resizableDiv).height);
-                this.task?.setHeight(
-                    `${Math.max(0, currentHeight + Math.floor(deltaY / this.pxm) * this.pxm)}`,
-                    5
-                )
-                console.log({currentHeight})
-            }
-        }
-
-        // Actualiza la última posición vertical del ratón
-        this.lastY = currentY
+      this.resize(e);
     }
   }
 
@@ -66,18 +67,15 @@ export class CalendarTaskMovement {
     if (this.isMovement) {
       this.isMovement = false;
       this.task = null;
-      this.calendar = null;
+      window.removeEventListener("mousemove", this.cbMouseMove.bind(this));
+      window.removeEventListener("mouseup", this.cbMouseUp.bind(this));
     }
-    console.log('isMovement', this.isMovement)
   }
 
   convertPixelsForMinutes() {
-    const pixels = this.calendar?.getView().getBody().getHeightRow()!   
+    const pixels = this.calendar?.getView().getBody().getHeightRow()!;
     const { intervalMinutes } = this.calendar?.getOptions()!;
     return (pixels / intervalMinutes) * 5;
   }
 
-//   getOptions<T>(): T {
-//     return this.calendar?.getOptions()! as T;
-//   }
 }

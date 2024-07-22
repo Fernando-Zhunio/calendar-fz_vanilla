@@ -9,23 +9,24 @@ import { CalendarWeekView } from "../values-object/CalendarWeekView";
 import { IView } from "./iview";
 import { CalendarTask } from "./Task/CalendarTask";
 
-export abstract class CalendarFz extends CalendarTaskMovement {
+export abstract class CalendarFz {
   view!: IView;
   typeView: TypesView = TypesView.weeks;
   contentClickRow!: PopoverContent;
   private element: HTMLElement;
   private options!: IWeekViewOptions | IDayViewOptions;
   private calendarId = generateUuid();
-
+  private calendarMovements!: CalendarTaskMovement;
   constructor(
     querySelector: string,
     options?: Partial<IWeekViewOptions | IDayViewOptions>
   ) {
-    super();
     this.element = document.querySelector(querySelector)!;
     if (!this.element) {
       throw new Error("Element not found");
     }
+    this.calendarMovements = new CalendarTaskMovement(this);
+
     this.element.setAttribute("calendar-id", this.calendarId);
     CommunicationService.registerCalendar(this.calendarId, this);
     this.changeView(TypesView.weeks, options);
