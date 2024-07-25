@@ -8,13 +8,16 @@ export class CalendarTaskMovement {
   isMovement: boolean = false;
   // lastY = 0;
   pxm = 0;
-  incrementHeightInterval: number = 5;
+  // incrementByMinutes = 0;
+   incrementMinutes: number = 5;
+   incrementPixels: number = 0;
   //currentHeight: number = 0;
   currentElement!: HTMLElement;
   originalHeight: number = 0;
   originalY: number = 0;
   originalMouseY: number = 0;
   minimumSize: number = 20;
+  currentHeight: number = 0;
 
   constructor(protected calendar: CalendarFz) {
     this.listenersInit();
@@ -30,12 +33,11 @@ export class CalendarTaskMovement {
 
   cbMouseDown(e: MouseEvent) {
     const target = e.target as HTMLElement;
-    if (target.classList.contains("calendar__body_task")) {
+    if (target.classList.contains("calendar__body_task_scaleY")) {
       this.isMovement = true;
       this.pxm = this.convertPixelsForMinutes();
-      this.task = this.calendar?.view
-        .getBody()
-        .getTaskForId(this.getAttributes(target, "task-id"))!;
+      this.incrementPixels = this.pxm * this.incrementMinutes;
+      this.task = this.getTaskByElement(target.parentElement!);
       this.currentElement = this.task?.getElement();
       this.originalHeight = this.currentElement.getBoundingClientRect().height!;
       this.originalMouseY = e.pageY;
@@ -46,16 +48,21 @@ export class CalendarTaskMovement {
   }
   resize(e: any) {
     const offset = e.pageY - this.originalMouseY;
-    if (offset%this.pxm != 0) {
+    if (offset%this.incrementPixels != 0) {
       return;
     }
     const height = this.originalHeight + (e.pageY - this.originalMouseY);
-    if (height > this.minimumSize) {
-      this.task?.setHeight(height + "px", offset > 0 ? this.incrementHeightInterval : -this.incrementHeightInterval);
+    if (height > this.minimumSize && height != this.currentHeight) {
+      this.task?.setHeight(height + "px", this.calculationDurationForHeight(height));
+      this.currentHeight = height;
     }
   }
 
-
+  getTaskByElement(element: HTMLElement) {
+    return this.calendar?.view
+      .getBody()
+      .getTaskForId(this.getAttributes(element!, "task-id"))!;
+  }
 
   cbMouseMove(e: MouseEvent) {
     if (this.isMovement) {
@@ -75,7 +82,11 @@ export class CalendarTaskMovement {
   convertPixelsForMinutes() {
     const pixels = this.calendar?.getView().getBody().getHeightRow()!;
     const { intervalMinutes } = this.calendar?.getOptions()!;
-    return (pixels / intervalMinutes) * 5;
+    return (pixels / intervalMinutes);
+  }
+
+  calculationDurationForHeight(height: number) {
+    return (height / this.pxm);
   }
 
 }

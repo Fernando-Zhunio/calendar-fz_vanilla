@@ -12,6 +12,8 @@ export class CalendarTask {
     element = document.createElement('div');
     taskId!: string
 
+    elementScaleY = document.createElement('div')
+
     position: ITaskPosition = {
         top: '0',
         left: '0',
@@ -22,6 +24,8 @@ export class CalendarTask {
     taskDuration!: CalendarTaskDuration
     constructor(protected date: Date, duration: number) {
         this.element.classList.add('calendar__body_task');
+        this.elementScaleY.classList.add('calendar__body_task_scaleY');
+        this.element.append(this.elementScaleY);
         Object.assign(this.element.style, this.position);
         this.taskDuration = new CalendarTaskDuration(duration, this.element)
     }
@@ -69,7 +73,7 @@ export class CalendarTask {
 
     setHeight(height: string, minutes: number) {
         this.position.height = height
-        this.setDuration(this.getDuration() + minutes)
+        this.setDuration(minutes)
         this.element.style.height = height
     }
 }
