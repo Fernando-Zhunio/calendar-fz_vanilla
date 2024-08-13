@@ -2,6 +2,8 @@
 // import { listHoursByInterval } from "../../tools/tools";
 import { ICalendarBody, IWeekViewOptions } from "../contracts/ICalendar";
 import { CalendarBodyRowsTools } from "../values-object/CalendarBodyRowsAndTaskTools";
+import { CalendarBodyBackdrop } from "./CalendarBodyBackdrop";
+import { CalendarBodyColumn } from "./CalendarBodyColumn";
 import { CalendarBodyContainerColumnsWeek } from "./CalendarBodyContainerColumnsWeek";
 import { CalendarTask } from "./Task/CalendarTask";
 // import { TaskBody } from "./TaskBody";
@@ -14,10 +16,16 @@ export class CalendarBodyWeek
   element = document.createElement("div");
   containerColumns!: CalendarBodyContainerColumnsWeek;
   taskList: CalendarTask[] = [];
+  calendarBackdrop!: CalendarBodyBackdrop;
   constructor(protected calendarId: string) {
     super(calendarId);
     this.init();
     this.assignClassCss();
+    this.calendarBackdrop = new CalendarBodyBackdrop(this.element);
+  }
+
+  getBackdrop() {
+    return this.calendarBackdrop;
   }
 
   init() {
@@ -41,16 +49,21 @@ export class CalendarBodyWeek
   }
 
   addTask(task: CalendarTask) {
+    const columnBody = this.columnByRangeDateTask(task.getDate());
+    if (columnBody) {
+      columnBody.addTask(task);
+      this.taskList.push(task);
+    }
+  }
+
+  private columnByRangeDateTask(date: Date): CalendarBodyColumn | null {
     const columnBody = this.containerColumns.columns.find(
       (x) =>
         x.getDate().toLocaleDateString() ===
-        task.getDate().toLocaleDateString()
+        date.toLocaleDateString()
     );
-    if (columnBody) {
-      const heightPixelRow = this.getHeightRow();
-      columnBody.addTask(task, heightPixelRow);
-      this.taskList.push(task);
-    }
+
+    return columnBody || null;
   }
 
   getHeightRow() {

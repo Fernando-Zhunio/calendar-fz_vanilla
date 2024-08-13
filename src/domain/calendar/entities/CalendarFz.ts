@@ -9,10 +9,10 @@ import { CalendarWeekView } from "../values-object/CalendarWeekView";
 import { IView } from "./iview";
 import { CalendarTask } from "./Task/CalendarTask";
 
-export abstract class CalendarFz {
+export class CalendarFz {
   view!: IView;
   typeView: TypesView = TypesView.weeks;
-  contentClickRow!: PopoverContent;
+  formCreateOrEditTask!: PopoverContent;
   private element: HTMLElement;
   private options!: IWeekViewOptions | IDayViewOptions;
   private calendarId = generateUuid();
@@ -25,30 +25,39 @@ export abstract class CalendarFz {
     if (!this.element) {
       throw new Error("Element not found");
     }
-    this.calendarMovements = new CalendarTaskMovement(this);
 
     this.element.setAttribute("calendar-id", this.calendarId);
     CommunicationService.registerCalendar(this.calendarId, this);
     this.changeView(TypesView.weeks, options);
     this.assignClassCss();
     Popover.init();
-    if (options?.querySelectorRowClick) {
-      this.setEnabledPopupInput(true, options?.querySelectorRowClick)
-    }
+    if (options?.idFormCreateOrEditTask) 
+      this.setEnabledPopupInput(true, options?.idFormCreateOrEditTask)
+    if (options?.heightRow)
+      this.changeHeightRow(options.heightRow);
+
+    this.calendarMovements = new CalendarTaskMovement(this);
+  }
+
+  changeHeightRow(height: number) {
+    document.documentElement.style.setProperty('--calendar-height-row', height + 'px');
+  }
+
+  getId() {
+    return this.calendarId;
   }
 
   setEnabledPopupInput(enabled: boolean, querySelectorRowClick?: string) {
-    if (enabled && querySelectorRowClick) {
-      this.options.querySelectorRowClick = querySelectorRowClick;
-      this.contentClickRow = new PopoverContent(querySelectorRowClick);
-      document.addEventListener(TypesCalendarEvent.CalendarRowClick, this.cbPopupClickRow.bind(this));
-    } else {
-      this.options.querySelectorRowClick = "";
-      document.removeEventListener(TypesCalendarEvent.CalendarRowClick, this.cbPopupClickRow.bind(this));
-    }
+    // if (enabled && querySelectorRowClick) {
+    //   this.options.idFormCreateOrEditTask = querySelectorRowClick;
+    //   this.contentClickRow = new PopoverContent(querySelectorRowClick);
+    //   document.addEventListener(TypesCalendarEvent.CalendarRowClick, this.cbPopupClickRow.bind(this));
+    // } else {
+    //   this.options.idFormCreateOrEditTask = "";
+    //   document.removeEventListener(TypesCalendarEvent.CalendarRowClick, this.cbPopupClickRow.bind(this));
+    // }
+    
   }
-
-  
 
   cbPopupClickRow(e: any) {
     Popover.open(e.detail.event.clientX, e.detail.event.clientY, this.contentClickRow);
@@ -86,7 +95,6 @@ export abstract class CalendarFz {
         break;
     }
     this.typeView = typeView;
-    //this.render();
   }
 
   getOptions() {
@@ -110,6 +118,9 @@ export abstract class CalendarFz {
   }
 
   addTask(task: CalendarTask) {
+    debugger;
+    task.setCalendarId(this.getId());
+    task.update();
     this.view.addTask(task);
   }
 

@@ -21,35 +21,7 @@ export function setupActionButtons(calendar: CalendarFz) {
     e.preventDefault();
     calendar.addTask(new CalendarTask(data.date, data.duration))
     calendar.closePopup();
-      // , `
-      // <div>${data.name}</div>
-      // <div>${data.date.toLocaleDateString()}</div>
-      // <div>${data.duration}</div>
-      // `);
   })
-
-  // document.getElementById("add-task")?.addEventListener("click", () => {
-    
-  //   console.log(calendar);
-  //       calendar.addTask(new Date('2022-01-05 15:00'), 30, `
-  //         <p>hola mundo</p>
-  //         <p>hola mundo</p>
-  //         <p>hola mundo</p>
-  //         `);
-  // });
-
-  // document.getElementById("save-task")?.addEventListener("click", () => {
-  //   console.log(calendar);
-  //   // const name = document.getElementById("name") as HTMLInputElement;
-  //   const date = document.getElementById("date") as HTMLInputElement;
-  //   calendar.addTask(new Date(date.value), 30, `
-  //         <p>hola mundo</p>
-  //         <p>hola mundo</p>
-  //         <p>hola mundo</p>
-  //         `);
-
-  // });
-
 }
 
 function getValuesFormAddTask() {

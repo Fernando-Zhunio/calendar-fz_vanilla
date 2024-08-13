@@ -1,3 +1,4 @@
+import { CalendarBodyBackdrop } from "../entities/CalendarBodyBackdrop";
 import { CalendarBodyColumn } from "../entities/CalendarBodyColumn";
 import { CalendarBodyRow } from "../entities/CalendarBodyRow";
 import { CalendarTask } from "../entities/Task/CalendarTask";
@@ -13,7 +14,10 @@ export interface IViewOptions {
   intervalMinutes: number;
   startTime: string;
   endTime: string;
-  querySelectorRowClick: string;
+  idFormCreateOrEditTask: string;
+  heightRow: number;
+  cbRemoveTask: (task: CalendarTask) => Promise<any>;
+  cbEditTask: (task: CalendarTask) => Promise<any>;
 }
 
 export interface IDayViewOptions extends IViewOptions {
@@ -34,8 +38,17 @@ export const defaultWeekViewOptions: IWeekViewOptions = {
   omitDays: [],
   startDay: 1,
   sprintDays: 7,
-  querySelectorRowClick: "",
+  idFormCreateOrEditTask: "",
+  heightRow: 36,
+  cbRemoveTask: fetchGet,
+  cbEditTask: fetchGet,
 };
+
+async function fetchGet(task: CalendarTask): Promise<any> {
+  return await fetch("https://jsonplaceholder.typicode.com/todos/1")
+    .then((response) => response.json())
+    .catch(() => {alert('A ocurrido un error'+ task.getId()); throw new Error();});
+}
 
 export interface IHeaderCalendar {
     // next(): void;
@@ -47,6 +60,8 @@ export interface ICalendarBody {
   getTaskForId(id: any): CalendarTask;
   getRows(): CalendarBodyRow[];
   getHeightRow(): number;
+  getBackdrop(): CalendarBodyBackdrop
+
 }
 
 export interface ICalendarDataWeek extends ICalendarData {

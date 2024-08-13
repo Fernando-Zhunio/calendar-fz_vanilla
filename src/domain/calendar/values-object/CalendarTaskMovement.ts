@@ -1,3 +1,4 @@
+import { CalendarBodyBackdrop } from "../entities/CalendarBodyBackdrop";
 import { CalendarFz } from "../entities/CalendarFz";
 // import { CalendarFz } from "../entities/CalendarFz";
 import { CalendarTask } from "../entities/Task/CalendarTask";
@@ -18,9 +19,11 @@ export class CalendarTaskMovement {
   originalMouseY: number = 0;
   minimumSize: number = 20;
   currentHeight: number = 0;
+  backdrop: CalendarBodyBackdrop
 
   constructor(protected calendar: CalendarFz) {
     this.listenersInit();
+    this.backdrop = calendar.getView().getBody().getBackdrop()  
   }
   listenersInit() {
     document.addEventListener("mousedown", this.cbMouseDown.bind(this));
@@ -41,7 +44,7 @@ export class CalendarTaskMovement {
       this.currentElement = this.task?.getElement();
       this.originalHeight = this.currentElement.getBoundingClientRect().height!;
       this.originalMouseY = e.pageY;
-
+      this.backdrop.show();
       window.addEventListener("mousemove", this.cbMouseMove.bind(this));
       window.addEventListener("mouseup", this.cbMouseUp.bind(this));
     }
@@ -53,7 +56,7 @@ export class CalendarTaskMovement {
     }
     const height = this.originalHeight + (e.pageY - this.originalMouseY);
     if (height > this.minimumSize && height != this.currentHeight) {
-      this.task?.setHeight(height + "px", this.calculationDurationForHeight(height));
+      this.task?.setHeight(height);
       this.currentHeight = height;
     }
   }
@@ -74,6 +77,7 @@ export class CalendarTaskMovement {
     if (this.isMovement) {
       this.isMovement = false;
       this.task = null;
+      this.backdrop.hide();
       window.removeEventListener("mousemove", this.cbMouseMove.bind(this));
       window.removeEventListener("mouseup", this.cbMouseUp.bind(this));
     }
@@ -84,9 +88,4 @@ export class CalendarTaskMovement {
     const { intervalMinutes } = this.calendar?.getOptions()!;
     return (pixels / intervalMinutes);
   }
-
-  calculationDurationForHeight(height: number) {
-    return (height / this.pxm);
-  }
-
 }

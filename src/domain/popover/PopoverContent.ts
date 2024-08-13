@@ -6,9 +6,10 @@ export class PopoverContent {
     }
 
     constructor(protected querySelector: string) {
-        this.getElement().style.display = "none";
-        this.getElement().style.position = "absolute";
-        this.getElement().style.zIndex = "100";
+        const element = this.getElement();
+        element.style.display = "none";
+        element.style.position = "absolute";
+        element.style.zIndex = "100";
     }
 
     show() {
