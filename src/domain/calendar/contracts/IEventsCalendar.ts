@@ -1,6 +1,5 @@
 export enum TypesCalendarEvent {
     CalendarRowClick = 'calendar_row_click'
-
 }
 
 export interface ICalendarEventRowClick {

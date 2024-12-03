@@ -1,5 +1,4 @@
 export class PopoverContent {
-    // querySelector: string = "";
 
     setQuerySelector(querySelector: string) {
         this.querySelector = querySelector;

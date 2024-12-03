@@ -9,7 +9,7 @@ import { CalendarWeekView } from "../values-object/CalendarWeekView";
 import { IView } from "./iview";
 import { CalendarTask } from "./Task/CalendarTask";
 
-export class CalendarFz {
+export class CalendarFz  {
   view!: IView;
   typeView: TypesView = TypesView.weeks;
   formCreateOrEditTask!: PopoverContent;
@@ -17,6 +17,7 @@ export class CalendarFz {
   private options!: IWeekViewOptions | IDayViewOptions;
   private calendarId = generateUuid();
   private calendarMovements!: CalendarTaskMovement;
+
   constructor(
     querySelector: string,
     options?: Partial<IWeekViewOptions | IDayViewOptions>
@@ -26,17 +27,20 @@ export class CalendarFz {
       throw new Error("Element not found");
     }
 
-    this.element.setAttribute("calendar-id", this.calendarId);
-    CommunicationService.registerCalendar(this.calendarId, this);
-    this.changeView(TypesView.weeks, options);
-    this.assignClassCss();
     Popover.init();
     if (options?.idFormCreateOrEditTask) 
-      this.setEnabledPopupInput(true, options?.idFormCreateOrEditTask)
+      this.setEnabledPopupInput(options?.idFormCreateOrEditTask)
     if (options?.heightRow)
       this.changeHeightRow(options.heightRow);
 
     this.calendarMovements = new CalendarTaskMovement(this);
+  }
+
+  initCalendar() {
+    this.element.setAttribute("calendar-id", this.calendarId);
+    CommunicationService.registerCalendar(this.calendarId, this);
+    this.changeView(TypesView.weeks, options);
+    this.assignClassCss();
   }
 
   changeHeightRow(height: number) {
@@ -47,15 +51,15 @@ export class CalendarFz {
     return this.calendarId;
   }
 
-  setEnabledPopupInput(enabled: boolean, querySelectorRowClick?: string) {
-    // if (enabled && querySelectorRowClick) {
-    //   this.options.idFormCreateOrEditTask = querySelectorRowClick;
-    //   this.contentClickRow = new PopoverContent(querySelectorRowClick);
-    //   document.addEventListener(TypesCalendarEvent.CalendarRowClick, this.cbPopupClickRow.bind(this));
-    // } else {
-    //   this.options.idFormCreateOrEditTask = "";
-    //   document.removeEventListener(TypesCalendarEvent.CalendarRowClick, this.cbPopupClickRow.bind(this));
-    // }
+  setEnabledPopupInput(querySelectorRowClick?: string) {
+    if (querySelectorRowClick) {
+      this.options.idFormCreateOrEditTask = querySelectorRowClick;
+      this.contentClickRow = new PopoverContent(querySelectorRowClick);
+      document.addEventListener(TypesCalendarEvent.CalendarRowClick, this.cbPopupClickRow.bind(this));
+    } else {
+      this.options.idFormCreateOrEditTask = "";
+      document.removeEventListener(TypesCalendarEvent.CalendarRowClick, this.cbPopupClickRow.bind(this));
+    }
     
   }
 

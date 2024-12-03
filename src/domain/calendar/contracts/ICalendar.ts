@@ -73,3 +73,10 @@ export interface ICalendarDataWeek extends ICalendarData {
 export interface ICalendarData {
 
 }
+
+export interface ICalendar {
+  render(args? : any) : void;
+  addTask() : void;
+  listEvent : any;
+  next(): void;
+}
