@@ -15,7 +15,6 @@ export class CalendarHeaderColumn extends CalendarColumn implements IColumnHead 
     init() {
         this.renderDay();
         this.buildLabel();
-        // this.element.append(this.elementDay, this.elementLabel);
     }
 
     next(sprintDays = 7) {

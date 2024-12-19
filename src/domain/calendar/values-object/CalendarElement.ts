@@ -4,7 +4,9 @@ export class CalendarElement {
         return this.element
     }
 
-    constructor(parent: HTMLElement) {
-        parent.append(this.element)
-    }
+    // constructor(parent: HTMLElement) {
+    //     parent.append(this.element)
+    // }
+
+    constructor(){}
 }

@@ -78,12 +78,23 @@ export enum TypesCalendarEvent {
 }
 
 export function getStartDateOfWeek(date: Date, startDay = 1): Date {
-  const currentDay = new Date(date).getDay();
-  if (currentDay == startDay) {
+  const currentDay = new Date(date).getDay(); //3
+  if (currentDay == startDay) { //false
     return date;
   }
-  return new Date(date.addDays(startDay - currentDay));
+  const dayAux = startDay - currentDay;
+  const daysToSubtract = startDay < currentDay ? dayAux  : dayAux -7;
+  return new Date(date.addDays(daysToSubtract));
 }
+
+/*
+25-12-2024  -> dia = miercoles(3)
+5 -> inicio viernes(5)
+20-12-2024 -> viernes(5) 
+
+
+
+*/
 
 
 // export function calculePositionTask(startTime: string, duration: number): ITaskPosition {

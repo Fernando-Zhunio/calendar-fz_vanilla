@@ -1,5 +1,5 @@
 import { ICalendarBody, ICalendarDataWeek } from "../contracts/ICalendar"
-import { CalendarBodyBackdrop } from "./CalendarBodyBackdrop"
+// import { CalendarBodyBackdrop } from "./CalendarBodyBackdrop"
 import { CalendarTask } from "./Task/CalendarTask"
 
 export interface IView {
@@ -10,4 +10,8 @@ export interface IView {
     getBody(): ICalendarBody
     getData(): ICalendarDataWeek 
     addTask(task: CalendarTask): void  
+}
+
+export interface IViewWeek extends IView {
+    changeDate(date: Date): void
 }

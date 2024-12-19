@@ -4,13 +4,15 @@ import { CalendarBodyRow } from "../entities/CalendarBodyRow";
 import { CalendarTask } from "../entities/Task/CalendarTask";
 
 export interface IWeekViewOptions extends IViewOptions {
-  omitDays?: number[];
-  startDay: 1 | 2 | 3 | 4 | 5 | 6 | 7;
-  sprintDays: 1 | 2 | 3 | 4 | 5 | 6 | 7;
+  omitDays: (1 | 2 | 3 | 4 | 5 | 6 | 7)[];
+  disabledDays: (1 | 2 | 3 | 4 | 5 | 6 | 7)[];
+  startDay: (1 | 2 | 3 | 4 | 5 | 6 | 7);
+  sprintDays: (1 | 2 | 3 | 4 | 5 | 6 | 7);
 }
 
 export interface IViewOptions {
-  currentDate: Date;
+  // currentDate: Date;
+  startDate: Date;
   intervalMinutes: number;
   startTime: string;
   endTime: string;
@@ -25,7 +27,7 @@ export interface IDayViewOptions extends IViewOptions {
 }
 
 const defaultViewOptions = {
-  currentDate: new Date(),
+  startDate: new Date(),
   intervalMinutes: 15,
   startTime: "08:00",
   endTime: "18:00",
@@ -36,6 +38,7 @@ export const defaultDayViewOptions = { ...defaultViewOptions, ...{} };
 export const defaultWeekViewOptions: IWeekViewOptions = {
   ...defaultViewOptions,
   omitDays: [],
+  disabledDays: [],
   startDay: 1,
   sprintDays: 7,
   idFormCreateOrEditTask: "",

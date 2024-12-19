@@ -1,4 +1,5 @@
 import { CalendarFz } from "./domain/calendar/entities/CalendarFz";
+import { IViewWeek } from "./domain/calendar/entities/iview";
 import { CalendarTask } from "./domain/calendar/entities/Task/CalendarTask";
 
 export function setupActionButtons(calendar: CalendarFz) {
@@ -9,6 +10,12 @@ export function setupActionButtons(calendar: CalendarFz) {
   document.getElementById("prev")?.addEventListener("click", () => {
     calendar.previous();
   });
+
+  document.getElementById("change-date")?.addEventListener("click", () => {
+    (calendar.view as IViewWeek).changeDate(new Date("10-10-2024"));
+    console.log({calendar});
+  });
+
   const selectInterval = document.getElementById(
     "select-interval"
   )! as HTMLSelectElement;

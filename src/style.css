@@ -244,3 +244,11 @@ button:disabled.is-loading::after,
   top: -6px;
   transform: translate(-50%, -100%)
 } */
+
+/*Nuevo data*/
+.calendar-fz {
+  min-width: 500px;
+}
+.calendar__header_column--disabled {
+  color: #cfcfcf;
+}

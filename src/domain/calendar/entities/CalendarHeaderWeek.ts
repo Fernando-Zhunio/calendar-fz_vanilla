@@ -50,9 +50,9 @@ export class CalendarHeaderWeek extends CalendarHeader implements IHeaderCalenda
       this.headDescription = new DescriptionHead(this.calendarId);
       this.headDescription.render(this.element);
     }
-    const {currentDate} = CommunicationService.getOptions(this.calendarId)!
-    text1 = text1 ?? '/'+currentDate.getFullYear().toString();
-    text2 = text2 ?? getLabelMonths(currentDate.getMonth())
+    const {startDate} = CommunicationService.getOptions(this.calendarId)!
+    text1 = text1 ?? '/'+startDate.getFullYear().toString();
+    text2 = text2 ?? getLabelMonths(startDate.getMonth())
     this.headDescription.setTextYear(text1);
     this.headDescription.setTextMonth(text2);
   }
