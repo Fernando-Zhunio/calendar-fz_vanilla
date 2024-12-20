@@ -16,9 +16,9 @@ declare global {
 const calendar = new CalendarFz("#calendar", {
   idFormCreateOrEditTask: "#form-template",
   omitDays: [],
-  disabledDays: [1,2, 5],
-  startDate: new Date('12-9-2024'),
-  startDay: 6
+  disabledDays: [6, 0],
+  startDate: new Date('12-12-2024'),
+  startDay: 1
 });
 
 calendar.addEventListener(TypesCalendarEvent.CalendarRowClick, (e) => {

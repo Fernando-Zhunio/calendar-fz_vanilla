@@ -1,4 +1,3 @@
-
 export enum TypesView {
   days = "days",
   months = "months",
@@ -79,11 +78,12 @@ export enum TypesCalendarEvent {
 
 export function getStartDateOfWeek(date: Date, startDay = 1): Date {
   const currentDay = new Date(date).getDay(); //3
-  if (currentDay == startDay) { //false
+  if (currentDay == startDay) {
+    //false
     return date;
   }
   const dayAux = startDay - currentDay;
-  const daysToSubtract = startDay < currentDay ? dayAux  : dayAux -7;
+  const daysToSubtract = startDay < currentDay ? dayAux : dayAux - 7;
   return new Date(date.addDays(daysToSubtract));
 }
 
@@ -95,7 +95,6 @@ export function getStartDateOfWeek(date: Date, startDay = 1): Date {
 
 
 */
-
 
 // export function calculePositionTask(startTime: string, duration: number): ITaskPosition {
 //   const { startTime: calendarStartTime } = this.getOptions<IViewOptions>()!;
@@ -111,17 +110,69 @@ export function getStartDateOfWeek(date: Date, startDay = 1): Date {
 //   };
 // }
 
+/**
+ * Calculate the position and height of a task in a calendar row.
+ * @param {Date} date - The date of the task.
+ * @param {string} startTimeColumn - The start time of the column that contains the task.
+ * @param {number} pixelsForMinutes - The number of pixels that a minute occupies in a row.
+ * @param {number} duration - The duration of the task in minutes.
+ * @returns {object} An object with two properties: `top` and `height`, both given as strings in the format `<value>px`.
+ */
+export function calculeTopAndHeight(
+  date: Date,
+  startTimeColumn: string,
+  pixelsForMinutes: number,
+  duration: number
+) {
+  const endTime = date.toTimeString().split(" ")[0];
+
+  return {
+    top: diffMinutes(startTimeColumn, endTime) * pixelsForMinutes + "px",
+    height: duration * pixelsForMinutes + "px",
+  };
+}
+
+/*************  ✨ Codeium Command ⭐  *************/
+/**
+ * Calculate the number of pixels that a minute occupies in a row.
+ * @param {number} heightRow - The height of the row in pixels.
+ * @param {number} intervalMinutes - The interval in minutes between two consecutive rows.
+ * @returns {number} The number of pixels that a minute occupies in a row.
+ */
+/******  77b4a557-329c-49c8-afe7-cd7fe4edafbf  *******/
+export function pixelsForMinutes(heightRow: number, intervalMinutes: number) {
+  return heightRow / intervalMinutes;
+}
+
+/**
+ * Calculate the difference in minutes between two times given as strings in the format 'HH:mm'.
+ * @param {string} startTime - The start time.
+ * @param {string} endTime - The end time.
+ * @returns {number} The difference in minutes.
+ */
+function diffMinutes(startTime: string, endTime: string) {
+  const start = startTime.split(":").map(Number);
+  const end = endTime.split(":").map(Number);
+  return (end[0] - start[0]) * 60 + (end[1] - start[1]);
+}
+
 export function getMinutesDistance(startTime: string, endTime: string) {
   const start = startTime.split(":").map(Number);
   const end = endTime.split(":").map(Number);
   return (end[0] - start[0]) * 60 + (end[1] - start[1]);
 }
 
-export function convertPixelsForMinutes(pixels: number, intervalMinutes: number) {
+export function convertPixelsForMinutes(
+  pixels: number,
+  intervalMinutes: number
+) {
   // const { intervalMinutes } = this.getOptions<IViewOptions>()!;
   return pixels / intervalMinutes;
 }
 
 export function generateUuid() {
-  return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+  return (
+    Math.random().toString(36).substring(2, 15) +
+    Math.random().toString(36).substring(2, 15)
+  );
 }

@@ -1,16 +1,23 @@
 import { IWeekViewOptions } from "../../domain/calendar/contracts/ICalendar";
+import { CalendarWeekBodyColumns } from "./calendar-week-body-columns";
+import { CalendarWeekBodyRow } from "./calendar-week-body-row";
 import { CalendarWeekBodyRows } from "./calendar-week-body-rows";
 
-export class CalendarWeekBody extends CalendarWeekBodyRows {
+export class CalendarWeekBody  {
+  protected rows: CalendarWeekBodyRow[] = [];
   element: HTMLElement = document.createElement("div");
-  
+  bodyRows!: CalendarWeekBodyRows;
+  bodyColumns!: CalendarWeekBodyColumns;
   constructor(protected options: IWeekViewOptions) {
-    super();
+    this.initBody();
   }
-
+  
   initBody() {
-    // const elementBody = this.getElementBody();
-    this.element.append(this.getElementRows());
+    this.bodyRows = new CalendarWeekBodyRows(this.options);
+    this.bodyColumns = new CalendarWeekBodyColumns(this.options);
+    this.assignClassCss();
+    this.element.append(this.bodyRows.getElement());
+    this.element.append(this.bodyColumns.getElement());
   }
 
   getElementBody() {

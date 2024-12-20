@@ -6,17 +6,17 @@ export class CalendarWeekHeader {
   // public  currentDate: Date;
   // public key: symbol;
   // public options: IWeekViewOptions;
-  protected startDate: Date;
+  //protected startDate: Date;
 
   columnsHeader: CalendarHeaderColumn[] = [];
   element = document.createElement("div");
 
   constructor(public options: IWeekViewOptions) {
     this.assignClassCssHeader();
-    this.startDate = this.getStartDate();
+    //this.startDate = this.getStartDate();
   }
 
-  getElementHeader() {
+  getElement() {
     return this.element;
   }
 
@@ -28,13 +28,16 @@ export class CalendarWeekHeader {
   }
 
   assignClassCssHeader() {
-    this.getElementHeader().classList.add("calendar__header_week");
+    this.getElement().classList.add("calendar__header_week");
     this.element.style.display = "grid";
   }
 
   initHeader() {
-    const element = this.getElementHeader();
-    const columnDate = new Date(this.startDate);
+    const element = this.getElement();
+    const columnDate = this.getStartDate(
+      this.options.startDate,
+      this.options.startDay
+    );
     element.innerHTML = "";
     this.columnsHeader = [];
     const omitDays = this.options.omitDays;
@@ -63,7 +66,7 @@ export class CalendarWeekHeader {
   }
 
   changeDateHeader() {
-    const startDate = new Date(this.startDate);
+    const startDate = new Date(this.options.startDate);
     for (let i = 1; i <= 7; i++) {
       const day = this.columnsHeader.find(
         (x) => x.getDate().getDay() == startDate.getDay()
@@ -76,14 +79,14 @@ export class CalendarWeekHeader {
   }
 
   nextHeader() {
-    this.startDate = this.startDate.addDays(7);
+    //this.startDate = this.startDate.addDays(7);
     this.columnsHeader.forEach((x) => {
       x.setDate(x.getDate().addDays(7));
     });
   }
 
   previousHeader() {
-    this.startDate = this.startDate.addDays(-7);
+    //this.startDate = this.startDate.addDays(-7);
     this.columnsHeader.forEach((x) => {
       x.setDate(x.getDate().addDays(-7));
     });

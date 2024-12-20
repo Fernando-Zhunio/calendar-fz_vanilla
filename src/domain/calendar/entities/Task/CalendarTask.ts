@@ -35,13 +35,13 @@ export class CalendarTask {
     this.assignClassCssAndAttributes();
     this.taskActions = new CalendarTaskActions(this.element);
     this.element.append(this.elementScaleY);
-    this.taskDuration = new CalendarTaskDuration(duration, this.element);
+    // this.taskDuration = new CalendarTaskDuration(duration, this.element);
   }
 
   public update() {
-    this.updateId();
-    this.updatePixelPXM();
-    this.updatePosition();
+    // this.updateId();
+    // this.updatePixelPXM();
+    // this.updatePosition();
     this.element.setAttribute("calendar-id", this.calendarId);
   }
 
@@ -122,28 +122,28 @@ export class CalendarTask {
     this.element.style.height = height + "px";
   }
 
-  calculePosition() {
-    const { startTime } = CommunicationService.getOptions(this.calendarId)!;
-    const endTime = this.date.toTimeString().split(" ")[0];
+  // calculePosition() {
+  //   const { startTime } = CommunicationService.getOptions(this.calendarId)!;
+  //   const endTime = this.date.toTimeString().split(" ")[0];
 
-    return {
-      top: this.diffMinutes(startTime, endTime) * this.pxm  + "px",
-      height: this.getDuration() * this.pxm + "px",
-    }
-  }
+  //   return {
+  //     top: this.diffMinutes(startTime, endTime) * this.pxm  + "px",
+  //     height: this.getDuration() * this.pxm + "px",
+  //   }
+  // }
 
   getActions() {
     return this.taskActions;
   }
 
-  updatePosition(){
-    const position = this.calculePosition();
-    Object.assign(this.element.style, position);
-  }
+  // updatePosition(){
+  //   const position = this.calculePosition();
+  //   Object.assign(this.element.style, position);
+  // }
 
-  diffMinutes(startTime: string, endTime: string) {
-    const start = startTime.split(":").map(Number);
-    const end = endTime.split(":").map(Number);
-    return (end[0] - start[0]) * 60 + (end[1] - start[1]);
-  }
+  // diffMinutes(startTime: string, endTime: string) {
+  //   const start = startTime.split(":").map(Number);
+  //   const end = endTime.split(":").map(Number);
+  //   return (end[0] - start[0]) * 60 + (end[1] - start[1]);
+  // }
 }
