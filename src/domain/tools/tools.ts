@@ -132,15 +132,13 @@ export function calculeTopAndHeight(
   };
 }
 
-/*************  ✨ Codeium Command ⭐  *************/
 /**
  * Calculate the number of pixels that a minute occupies in a row.
  * @param {number} heightRow - The height of the row in pixels.
  * @param {number} intervalMinutes - The interval in minutes between two consecutive rows.
  * @returns {number} The number of pixels that a minute occupies in a row.
  */
-/******  77b4a557-329c-49c8-afe7-cd7fe4edafbf  *******/
-export function pixelsForMinutes(heightRow: number, intervalMinutes: number) {
+export function getPixelsForMinutes(heightRow: number, intervalMinutes: number) {
   return heightRow / intervalMinutes;
 }
 

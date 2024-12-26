@@ -35,7 +35,7 @@ export class CalendarTask {
     this.assignClassCssAndAttributes();
     this.taskActions = new CalendarTaskActions(this.element);
     this.element.append(this.elementScaleY);
-    // this.taskDuration = new CalendarTaskDuration(duration, this.element);
+    this.taskDuration = new CalendarTaskDuration(duration, this.element);
   }
 
   public update() {

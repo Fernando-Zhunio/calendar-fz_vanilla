@@ -1,4 +1,5 @@
 import { IWeekViewOptions } from "../../domain/calendar/contracts/ICalendar";
+import { CalendarTask } from "../../domain/calendar/entities/Task/CalendarTask";
 import { getStartDateOfWeek } from "../../domain/tools/tools";
 import { CalendarBodyColumn } from "../shared/calendar-body-column";
 // import { CalendarWeekBodyRow } from "./calendar-week-body-row";
@@ -6,7 +7,7 @@ import { CalendarBodyColumn } from "../shared/calendar-body-column";
 export class CalendarWeekBodyColumns {
   element = document.createElement("div");
 //   protected abstract options: IWeekViewOptions;
-  protected days: CalendarBodyColumn[] = [];
+  protected days: Map<string,CalendarBodyColumn> = new Map();
 
   constructor(private options : IWeekViewOptions) {
     this.assignClassCss();
@@ -32,7 +33,7 @@ export class CalendarWeekBodyColumns {
               this.options.startDay
             );
         element.innerHTML = "";
-        this.days = [];
+        this.days = new Map();
         const omitDays = this.options.omitDays;
         for (let dayNumber = 1; dayNumber <= 7; dayNumber++) {
           if (omitDays.includes(dayNumber as any)) {
@@ -45,9 +46,9 @@ export class CalendarWeekBodyColumns {
           );
           columnDate.addDays(1);
           element.append(column.getElement());
-          this.days.push(column);
+          this.days.set(columnDate.toLocaleDateString(), column);
         }
-        const colsLength = this.days.length;
+        const colsLength = this.days.size;
         this.element.style.gridTemplateColumns = `repeat(${colsLength}, ${
           100 / colsLength
         }%)`;
@@ -69,5 +70,12 @@ export class CalendarWeekBodyColumns {
     this.days.forEach((x) => {
       x.setDate(x.getDate().addDays(-7));
     });
+  }
+
+  addTask(task: CalendarTask) {
+    const columnDay = this.days.get(task.getDate().toLocaleDateString());
+    if (columnDay) {
+      
+    }
   }
 }

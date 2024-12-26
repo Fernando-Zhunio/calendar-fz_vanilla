@@ -1,6 +1,6 @@
 // import { CommunicationService } from "../../../application/CommunicationService";
 // import { listHoursByInterval } from "../../tools/tools";
-import { ICalendarBody, IWeekViewOptions } from "../contracts/ICalendar";
+import {  IWeekViewOptions } from "../contracts/ICalendar";
 import { CalendarBodyRowsTools } from "../values-object/CalendarBodyRowsAndTaskTools";
 import { CalendarBodyBackdrop } from "./CalendarBodyBackdrop";
 import { CalendarBodyColumn } from "./CalendarBodyColumn";
@@ -11,7 +11,6 @@ import { CalendarTask } from "./Task/CalendarTask";
 
 export class CalendarBodyWeek
   extends CalendarBodyRowsTools<IWeekViewOptions>
-  implements ICalendarBody
 {
   element = document.createElement("div");
   containerColumns!: CalendarBodyContainerColumnsWeek;
@@ -95,20 +94,20 @@ export class CalendarBodyWeek
   //   });
   // }
 
-  validatorTask(dateTime: Date) {
-    const { currentDate, startTime, endTime, sprintDays } = this.getOptions()!;
-    const endDate = new Date(currentDate).addDays(sprintDays);
-    if (dateTime < currentDate || dateTime > endDate) {
-      return false;
-    }
-    const hour = dateTime.toTimeString().split(" ")[0];
+  // validatorTask(dateTime: Date) {
+  //   const { currentDate, startTime, endTime, sprintDays } = this.getOptions()!;
+  //   const endDate = new Date(currentDate).addDays(sprintDays);
+  //   if (dateTime < currentDate || dateTime > endDate) {
+  //     return false;
+  //   }
+  //   const hour = dateTime.toTimeString().split(" ")[0];
 
-    if (hour < startTime || hour > endTime) {
-      return false;
-    }
+  //   if (hour < startTime || hour > endTime) {
+  //     return false;
+  //   }
 
-    return true;
-  }
+  //   return true;
+  // }
 
   changeIntervalEffect() {
     this.dispatchEvent(new Event('update-task'));

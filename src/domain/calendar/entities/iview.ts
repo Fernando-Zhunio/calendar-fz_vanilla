@@ -1,4 +1,4 @@
-import { ICalendarBody, ICalendarDataWeek } from "../contracts/ICalendar"
+import { ICalendarDataWeek } from "../contracts/ICalendar"
 // import { CalendarBodyBackdrop } from "./CalendarBodyBackdrop"
 import { CalendarTask } from "./Task/CalendarTask"
 
@@ -9,9 +9,23 @@ export interface IView {
     changeInterval(interval: number): void
     getBody(): ICalendarBody
     getData(): ICalendarDataWeek 
-    addTask(task: CalendarTask): void  
+    addTask(task: CalendarTask): void
+    goDate(date: Date): void
+    getHeader(): ICalendarHeader
+    getBody(): ICalendarBody
 }
 
 export interface IViewWeek extends IView {
-    changeDate(date: Date): void
+    goDate(date: Date): void
+}
+
+export interface ICalendarHeader {
+    goDate(date: Date): void
+    next(): void
+    previous(): void
+}
+
+export interface ICalendarBody {
+    nextBody(): void
+    previousBody(): void
 }

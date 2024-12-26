@@ -1,23 +1,27 @@
-import { CommunicationService } from "../../../application/CommunicationService";
+import { TaskFactory } from "../../../application/factories/task-factory";
 import { CalendarWeek } from "../../../application/week/calendar-week";
+import { ScopeCalendar, ScopeTokens } from "../../../infraestructure/dependency-container";
 import { Popover } from "../../popover/Popover";
 import { PopoverContent } from "../../popover/PopoverContent";
-import { generateUuid, TypesView } from "../../tools/tools";
-import { IDayViewOptions, IWeekViewOptions, defaultWeekViewOptions, defaultDayViewOptions } from "../contracts/ICalendar";
+import { TypesView } from "../../tools/tools";
+import {
+  IDayViewOptions,
+  IWeekViewOptions,
+  defaultWeekViewOptions,
+  defaultDayViewOptions,
+} from "../contracts/ICalendar";
 import { TypesCalendarEvent } from "../contracts/IEventsCalendar";
 // import { CalendarTaskMovement } from "../values-object/CalendarTaskMovement";
 // import { CalendarWeekView } from "../values-object/CalendarWeekView";
 import { IView } from "./iview";
 import { CalendarTask } from "./Task/CalendarTask";
 
-export class CalendarFz  {
+export class CalendarFz {
   view!: IView;
   typeView: TypesView = TypesView.weeks;
   formCreateOrEditTask!: PopoverContent;
   private element: HTMLElement;
-  //private options!: IWeekViewOptions | IDayViewOptions;
-  private calendarId = generateUuid();
-  // private calendarMovements!: CalendarTaskMovement;
+  scope = new ScopeCalendar();
 
   constructor(
     querySelector: string,
@@ -29,29 +33,43 @@ export class CalendarFz  {
     }
     this.init();
     // Popover.init();
-    // if (options?.idFormCreateOrEditTask) 
+    // if (options?.idFormCreateOrEditTask)
     //   this.setEnabledPopupInput(options?.idFormCreateOrEditTask)
-    if (options?.heightRow)
-      this.changeHeightRow(options.heightRow);
-
+    if (options?.heightRow) this.changeHeightRow(options.heightRow);
     // this.calendarMovements = new CalendarTaskMovement(this);
   }
 
+  assignClassCss() {
+    this.element.classList.add("calendar-fz");
+  }
+
   init() {
-    this.element.setAttribute("calendar-id", this.calendarId);
-    CommunicationService.registerCalendar(this.calendarId, this);
+    this.registerScopes();
+    // this.registersContainer();
+    // this.element.setAttribute("calendar-id", this.calendarId);
+    // CommunicationService.registerCalendar(this.calendarId, this);
     this.changeView(TypesView.weeks);
     this.assignClassCss();
+    const task = new CalendarTask(new Date('12-12-2024'), 10);
+    this.addTask(task)
   }
+
+  registerScopes() {
+    this.scope.setValue(ScopeTokens.CALENDAR, this);
+    this.scope.setValue(ScopeTokens.OPTIONS, this.options);
+  }
+
+  // registersContainer() {
+  //   this.scope.registerSingleton(ConfigurationCalendar);
+  //   this.scope.registerSingleton<IView>(CalendarWeek, this.options, this.getElement());
+  // }
 
   changeHeightRow(height: number) {
-    document.documentElement.style.setProperty('--calendar-height-row', height + 'px');
+    document.documentElement.style.setProperty(
+      "--calendar-height-row",
+      height + "px"
+    );
   }
-
-  getId() {
-    return this.calendarId;
-  }
-
 
   // setEnabledPopupInput(querySelectorRowClick?: string) {
   //   if (querySelectorRowClick) {
@@ -62,25 +80,25 @@ export class CalendarFz  {
   //     this.options.idFormCreateOrEditTask = "";
   //     document.removeEventListener(TypesCalendarEvent.CalendarRowClick, this.cbPopupClickRow.bind(this));
   //   }
-    
+
   // }
 
   // cbPopupClickRow(e: any) {
   //   Popover.open(e.detail.event.clientX, e.detail.event.clientY, this.contentClickRow);
   // }
 
-  addEventListener(typesCalendarEvent:TypesCalendarEvent, callback: (e: any) => void) {
-    document.addEventListener(typesCalendarEvent, (e: any) => callback(e.detail));
-  }
-
-  assignClassCss() {
-    this.element.classList.add("calendar-fz");
+  addEventListener(
+    typesCalendarEvent: TypesCalendarEvent,
+    callback: (e: any) => void
+  ) {
+    document.addEventListener(typesCalendarEvent, (e: any) =>
+      callback(e.detail)
+    );
   }
 
   getElement() {
     return this.element;
   }
-
 
   changeView(typeView: TypesView) {
     switch (typeView) {
@@ -117,6 +135,10 @@ export class CalendarFz  {
     this.view.previous();
   }
 
+  goDate(date: Date) {
+    this.view.goDate(date);
+  }
+
   changeInterval(interval: number) {
     this.view.changeInterval(interval);
   }
@@ -126,10 +148,11 @@ export class CalendarFz  {
   }
 
   addTask(task: CalendarTask) {
-    debugger;
-    task.setCalendarId(this.getId());
-    task.update();
-    this.view.addTask(task);
+    // debugger;
+    //task.setCalendarId(this.getId());
+    //task.update();
+    //this.view.addTask(task);
+    TaskFactory.createTask(task, this.scope);
   }
 
   getData() {
@@ -141,3 +164,8 @@ export class CalendarFz  {
   }
 }
 
+class ConfigurationCalendar {
+  options!: IWeekViewOptions | IDayViewOptions;
+  element!: HTMLElement;
+  calendar!: CalendarFz;
+}

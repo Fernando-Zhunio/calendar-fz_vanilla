@@ -1,8 +1,9 @@
 import { IWeekViewOptions } from "../../domain/calendar/contracts/ICalendar";
+import { ICalendarHeader } from "../../domain/calendar/entities/iview";
 import { getLabelDays, getStartDateOfWeek } from "../../domain/tools/tools";
 import { CalendarHeaderColumn } from "../shared/calendar-header-column";
 
-export class CalendarWeekHeader {
+export class CalendarWeekHeader implements ICalendarHeader {
   // public  currentDate: Date;
   // public key: symbol;
   // public options: IWeekViewOptions;
@@ -65,8 +66,8 @@ export class CalendarWeekHeader {
     return this.options.disabledDays.includes(day as any);
   }
 
-  changeDateHeader() {
-    const startDate = new Date(this.options.startDate);
+  goDate(date: Date) {
+    const startDate = new Date(date);
     for (let i = 1; i <= 7; i++) {
       const day = this.columnsHeader.find(
         (x) => x.getDate().getDay() == startDate.getDay()
@@ -78,14 +79,13 @@ export class CalendarWeekHeader {
     }
   }
 
-  nextHeader() {
-    //this.startDate = this.startDate.addDays(7);
+  next() {
     this.columnsHeader.forEach((x) => {
       x.setDate(x.getDate().addDays(7));
     });
   }
 
-  previousHeader() {
+  previous() {
     //this.startDate = this.startDate.addDays(-7);
     this.columnsHeader.forEach((x) => {
       x.setDate(x.getDate().addDays(-7));

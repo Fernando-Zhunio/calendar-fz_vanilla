@@ -61,13 +61,13 @@ export interface IHeaderCalendar {
   // previous(): void;
 }
 
-export interface ICalendarBody {
-  getColumns(): CalendarBodyColumn[];
-  getTaskForId(id: any): CalendarTask;
-  getRows(): CalendarBodyRow[];
-  getHeightRow(): number;
-  getBackdrop(): CalendarBodyBackdrop;
-}
+// export interface ICalendarBody {
+//   getColumns(): CalendarBodyColumn[];
+//   getTaskForId(id: any): CalendarTask;
+//   getRows(): CalendarBodyRow[];
+//   getHeightRow(): number;
+//   getBackdrop(): CalendarBodyBackdrop;
+// }
 
 export interface ICalendarDataWeek extends ICalendarData {
   startDate: Date;

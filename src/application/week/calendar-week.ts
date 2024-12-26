@@ -1,11 +1,9 @@
 import {
-  ICalendarBody,
   ICalendarDataWeek,
   IWeekViewOptions,
 } from "../../domain/calendar/contracts/ICalendar";
-import { IViewWeek } from "../../domain/calendar/entities/iview";
+import { ICalendarBody, IViewWeek } from "../../domain/calendar/entities/iview";
 import { CalendarTask } from "../../domain/calendar/entities/Task/CalendarTask";
-import { calculeTopAndHeight, getStartDateOfWeek } from "../../domain/tools/tools";
 import { CalendarWeekBody } from "./calendar-week-body";
 import { CalendarWeekHeader } from "./calendar-week-header";
 
@@ -14,8 +12,6 @@ export interface IOptionsRender {
 }
 export class CalendarWeek implements IViewWeek {
   public currentDate!: Date;
-  public key!: symbol;
-  //public days: string[];
   public options!: IWeekViewOptions;
   protected startDate!: Date;
   listEvent: any;
@@ -28,26 +24,25 @@ export class CalendarWeek implements IViewWeek {
     this.init();
   }
 
-  changeDate(date: Date): void {
-    debugger
-    this.options.startDate = date;
-    //this.startDate = this.getStartDate();
-    this.header.changeDateHeader();
+  goDate(date: Date): void {
+    this.header.goDate(date);
+
   }
 
+  getHeader(): CalendarWeekHeader {
+    return this.header;
+  }
+
+
+
   init() {
-    //this.startDate = this.getStartDate();
     this.render();
     this.elementCalendar.append(this.header.element);
     this.elementCalendar.append(this.body.element);
   }
 
-  protected getStartDate(date?: Date, startDay?: number): Date {
-    return  getStartDateOfWeek(date || this.options.startDate, startDay || this.options.startDay);
-  }
-
   previous(): void {
-    this.header.previousHeader();
+    this.header.previous();
     this.body.bodyColumns.previousBody();
   }
 
@@ -56,7 +51,7 @@ export class CalendarWeek implements IViewWeek {
   }
 
   getBody(): ICalendarBody {
-    throw new Error("Method not implemented.");
+    return this.body;
   }
 
   getData(): ICalendarDataWeek {
@@ -64,18 +59,12 @@ export class CalendarWeek implements IViewWeek {
   }
 
   next(): void {
-    this.header.nextHeader();
+    this.header.next();
     this.body.bodyColumns.nextBody();
   }
 
   addTask(task: CalendarTask): void {
-    const columnDay = this.body.bodyColumns.getDays()
-    .find((x) => x.getDate().toLocaleDateString() === task.getDate().toLocaleDateString());
-
-    if (columnDay) {
-      const {} = calculeTopAndHeight(task.getDate(), this.options.startTime, task.getDuration());
-      columnDay.addTask(task);
-    }
+    
   }
 
   render(): void {

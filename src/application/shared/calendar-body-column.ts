@@ -38,6 +38,7 @@ export class CalendarBodyColumn extends CalendarElement {
 
     addTask(calendarTask: CalendarTask) {
         this.taskList.push(calendarTask);
+        this.getElement().append(calendarTask.getElement());
         console.log("add task")
     }
     

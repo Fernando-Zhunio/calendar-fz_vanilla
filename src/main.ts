@@ -1,4 +1,5 @@
 import { setupActionButtons } from "./ActionButtons";
+import { DependencyContainer } from "./infraestructure/dependency-container";
 import { CalendarFz } from "./domain/calendar/entities/CalendarFz";
 import { TypesCalendarEvent } from "./domain/tools/tools";
 import "./style.css";
@@ -29,3 +30,16 @@ calendar.addEventListener(TypesCalendarEvent.CalendarRowClick, (e) => {
 });
 
 setupActionButtons(calendar);
+
+
+///***** Injection Dependency */
+//const container = new DependencyContainer();
+
+// Registramos las clases.
+// container.register(CalendarFz);
+
+// // Creamos un primer scope y resuelve las dependencias.
+// const scope1 = container.createScope();
+// const calendar1 = scope1.resolve<CalendarFz>(CalendarFz);
+
+//  */
