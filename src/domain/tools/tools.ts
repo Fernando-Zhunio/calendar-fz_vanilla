@@ -1,3 +1,5 @@
+import { Hour } from "../../application-contract/hour";
+
 export enum TypesView {
   days = "days",
   months = "months",
@@ -113,22 +115,22 @@ export function getStartDateOfWeek(date: Date, startDay = 1): Date {
 /**
  * Calculate the position and height of a task in a calendar row.
  * @param {Date} date - The date of the task.
- * @param {string} startTimeColumn - The start time of the column that contains the task.
+ * @param {string} startTime - The start time of the column that contains the task.
  * @param {number} pixelsForMinutes - The number of pixels that a minute occupies in a row.
  * @param {number} duration - The duration of the task in minutes.
  * @returns {object} An object with two properties: `top` and `height`, both given as strings in the format `<value>px`.
  */
 export function calculeTopAndHeight(
-  date: Date,
-  startTimeColumn: string,
-  pixelsForMinutes: number,
-  duration: number
+  startTime: string,
+  initTaskTime: Hour,
+  endTaskTime: Hour,
+  pixelsForMinutes: number
 ) {
-  const endTime = date.toTimeString().split(" ")[0];
+  //const endTime = date.toTimeString().split(" ")[0];
 
   return {
-    top: diffMinutes(startTimeColumn, endTime) * pixelsForMinutes + "px",
-    height: duration * pixelsForMinutes + "px",
+    top: diffMinutes(startTime, initTaskTime) * pixelsForMinutes + "px",
+    height: diffMinutes(initTaskTime, endTaskTime) * pixelsForMinutes + "px",
   };
 }
 
@@ -173,4 +175,23 @@ export function generateUuid() {
     Math.random().toString(36).substring(2, 15) +
     Math.random().toString(36).substring(2, 15)
   );
+}
+
+export function sanitizeHTML(input: string) {
+  // Crea un documento temporal para parsear el HTML de manera segura
+  const doc = new DOMParser().parseFromString(input, 'text/html');
+
+  // Elimina todos los elementos <script>
+  const scripts = doc.querySelectorAll('script');
+  scripts.forEach(script => script.remove());
+  
+  // Opcional: Eliminar atributos peligrosos
+  const dangerousAttributes = ['onerror', 'onclick', 'onload', 'onmouseover', 'onfocus', 'onkeydown'];
+  dangerousAttributes.forEach(attr => {
+    const elements = doc.querySelectorAll(`[${attr}]`);
+    elements.forEach(el => el.removeAttribute(attr));
+  });
+  
+  // Devuelve el contenido limpio como HTML
+  return doc.body.innerHTML;
 }

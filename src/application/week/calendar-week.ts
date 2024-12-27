@@ -37,7 +37,7 @@ export class CalendarWeek implements IViewWeek {
 
   init() {
     this.render();
-    this.elementCalendar.append(this.header.element);
+    this.elementCalendar.append(this.header.elementContainer);
     this.elementCalendar.append(this.body.element);
   }
 

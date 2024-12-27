@@ -44,9 +44,9 @@ export class CalendarWeekBodyColumns {
             new Date(columnDate),
             this.isDayDisable(columnDate.getDay())
           );
+          this.days.set(new Date(columnDate).toLocaleDateString(), column);
           columnDate.addDays(1);
           element.append(column.getElement());
-          this.days.set(columnDate.toLocaleDateString(), column);
         }
         const colsLength = this.days.size;
         this.element.style.gridTemplateColumns = `repeat(${colsLength}, ${
@@ -75,7 +75,7 @@ export class CalendarWeekBodyColumns {
   addTask(task: CalendarTask) {
     const columnDay = this.days.get(task.getDate().toLocaleDateString());
     if (columnDay) {
-      
+
     }
   }
 }

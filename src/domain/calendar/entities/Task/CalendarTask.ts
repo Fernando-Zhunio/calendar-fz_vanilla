@@ -1,5 +1,6 @@
+import { Hour } from "../../../../application-contract/hour";
 import { CommunicationService } from "../../../../application/CommunicationService";
-import { generateUuid } from "../../../tools/tools";
+import { generateUuid, sanitizeHTML } from "../../../tools/tools";
 import { CalendarTaskActions } from "./CalendarTaskActions";
 import { CalendarTaskDuration } from "./CalendarTaskDuration";
 
@@ -8,6 +9,12 @@ export interface ITaskPosition {
   left?: string;
   height?: string;
   width?: string;
+}
+
+export interface IOptionsTask {
+  templateOrTitle: string;
+  isTemplate?: boolean;
+
 }
 
 export class CalendarTask {
@@ -30,12 +37,28 @@ export class CalendarTask {
   taskDuration!: CalendarTaskDuration;
   constructor(
     protected date: Date,
-    duration: number
+    protected startTime: Hour,
+    protected endTime: Hour,
+    protected options: IOptionsTask = { templateOrTitle: "", isTemplate: false },
   ) {
     this.assignClassCssAndAttributes();
-    this.taskActions = new CalendarTaskActions(this.element);
-    this.element.append(this.elementScaleY);
-    this.taskDuration = new CalendarTaskDuration(duration, this.element);
+    //this.taskActions = new CalendarTaskActions(this.element);
+    //this.element.append(this.elementScaleY);
+    //this.taskDuration = new CalendarTaskDuration(duration, this.element);
+    if (options?.isTemplate) {
+      this.element.innerHTML = sanitizeHTML(options.templateOrTitle);
+    } else {
+      this.element.innerHTML = this.generateTemplateDefault();
+    }
+  }
+
+  generateTemplateDefault() {
+    return `
+      <div class="calendar__body_task_content">
+        <div class="calendar__body_task_content_title">${this.options.templateOrTitle}</div>
+        <div class="calendar__body_task_content_hour">${this.startTime} - ${this.endTime}</div>
+      </div>
+    `;
   }
 
   public update() {
@@ -72,6 +95,13 @@ export class CalendarTask {
 
   getDate() {
     return this.date;
+  }
+
+  getStartTime(): Hour {
+    return this.startTime;
+  }
+  getEndTime(): Hour {
+    return this.endTime;
   }
 
   getDuration() {

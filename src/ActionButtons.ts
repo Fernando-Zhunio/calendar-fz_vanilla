@@ -12,7 +12,7 @@ export function setupActionButtons(calendar: CalendarFz) {
   });
 
   document.getElementById("change-date")?.addEventListener("click", () => {
-    (calendar.view as IViewWeek).changeDate(new Date("10-10-2024"));
+    (calendar.view as IViewWeek).goDate(new Date("10-10-2024"));
     console.log({calendar});
   });
 
@@ -23,11 +23,11 @@ export function setupActionButtons(calendar: CalendarFz) {
     calendar.changeInterval(+selectInterval!.value);
   });
 
-  document.getElementById('save-task')?.addEventListener('click', (e) => {
-    const data = getValuesFormAddTask();
+  document.getElementById('add-task')?.addEventListener('click', (e) => {
+    //const data = getValuesFormAddTask();
     e.preventDefault();
-    calendar.addTask(new CalendarTask(data.date, data.duration))
-    calendar.closePopup();
+    calendar.addTask(new CalendarTask(new Date('12/12/2024'), '01:10','02:55',{templateOrTitle: 'Fernando Zhunio'}))
+    //calendar.closePopup();
   })
 }
 

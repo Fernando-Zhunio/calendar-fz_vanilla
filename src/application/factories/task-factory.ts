@@ -1,4 +1,3 @@
-import { IWeekViewOptions } from "../../domain/calendar/contracts/ICalendar";
 import { CalendarFz } from "../../domain/calendar/entities/CalendarFz";
 import { CalendarTask } from "../../domain/calendar/entities/Task/CalendarTask";
 import {
@@ -6,7 +5,7 @@ import {
   getPixelsForMinutes,
   TypesView,
 } from "../../domain/tools/tools";
-import { DependencyContainer, ScopeCalendar, ScopeTokens } from "../../infraestructure/dependency-container";
+import { ScopeCalendar, ScopeTokens } from "../../infraestructure/dependency-container";
 import { CalendarWeekBody } from "../week/calendar-week-body";
 
 export class TaskFactory {
@@ -23,12 +22,15 @@ export class TaskFactory {
   private static assignDayColumnTask(task: CalendarTask, calendar: CalendarFz) {
     if (calendar.typeView == TypesView.weeks) {
       const body = calendar.view.getBody() as CalendarWeekBody;
-      const columnDay = body.bodyColumns
-        .getDays()
-        .get(task.getDate().toLocaleDateString());
+      const key = task.getDate().toLocaleDateString();
+      const days = body.bodyColumns.getDays();
+      const columnDay = days
+        .get(key);
       if (!columnDay) {
+        console.log('La tarea no esta en el rango de fecha de la vista');
         return;
       }
+      
         columnDay.addTask(task);
     }
   }
@@ -37,15 +39,13 @@ export class TaskFactory {
     task: CalendarTask,
     calendar: CalendarFz
   ) {
-    const duration = task.getDuration();
-    const { heightRow, startTime } = calendar.getOptions()!;
-    const pixelsForMinutes = getPixelsForMinutes(heightRow!, 60);
-    const date = task.getDate();
+    const { heightRow, startTime, intervalMinutes } = calendar.getOptions()!;
+    const pixelsForMinutes = getPixelsForMinutes(heightRow!, intervalMinutes!);
     const { height, top } = calculeTopAndHeight(
-      date,
-      startTime!,
+       startTime!,
+       task.getStartTime(),
+       task.getEndTime(),
       pixelsForMinutes,
-      duration
     );
     Object.assign(task.getElement().style, { height, top });
   }

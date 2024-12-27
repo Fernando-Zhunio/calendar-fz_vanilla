@@ -50,14 +50,22 @@ export class CalendarFz {
     // CommunicationService.registerCalendar(this.calendarId, this);
     this.changeView(TypesView.weeks);
     this.assignClassCss();
-    const task = new CalendarTask(new Date('12-12-2024'), 10);
+    const task = new CalendarTask(new Date('12-12-2024'), '11:00', '15:00', { templateOrTitle: 'Task 1' });
+    const task1 = new CalendarTask(new Date('12-12-2024'), '11:00', '15:00', { templateOrTitle: 'Task 1' });
+    const task2 = new CalendarTask(new Date('12-12-2024'), '12:00', '16:00', { templateOrTitle: 'Task 1' });
+    const task3 = new CalendarTask(new Date('12-12-2024'), '08:00', '11:01', { templateOrTitle: 'Task 1' });
     this.addTask(task)
+    this.addTask(task1)
+    this.addTask(task2)
+    this.addTask(task3)
   }
 
   registerScopes() {
     this.scope.setValue(ScopeTokens.CALENDAR, this);
     this.scope.setValue(ScopeTokens.OPTIONS, this.options);
   }
+
+  
 
   // registersContainer() {
   //   this.scope.registerSingleton(ConfigurationCalendar);
@@ -164,8 +172,8 @@ export class CalendarFz {
   }
 }
 
-class ConfigurationCalendar {
-  options!: IWeekViewOptions | IDayViewOptions;
-  element!: HTMLElement;
-  calendar!: CalendarFz;
-}
+// class ConfigurationCalendar {
+//   options!: IWeekViewOptions | IDayViewOptions;
+//   element!: HTMLElement;
+//   calendar!: CalendarFz;
+// }

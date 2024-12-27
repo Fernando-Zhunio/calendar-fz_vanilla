@@ -10,10 +10,12 @@ export class CalendarWeekHeader implements ICalendarHeader {
   //protected startDate: Date;
 
   columnsHeader: CalendarHeaderColumn[] = [];
+  elementContainer = document.createElement("div");
   element = document.createElement("div");
 
   constructor(public options: IWeekViewOptions) {
     this.assignClassCssHeader();
+    this.elementContainer.append(this.element);
     //this.startDate = this.getStartDate();
   }
 
@@ -31,6 +33,7 @@ export class CalendarWeekHeader implements ICalendarHeader {
   assignClassCssHeader() {
     this.getElement().classList.add("calendar__header_week");
     this.element.style.display = "grid";
+    this.elementContainer.classList.add("calendar__header_week_container");
   }
 
   initHeader() {
