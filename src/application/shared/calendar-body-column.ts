@@ -1,5 +1,11 @@
 import { CalendarTask } from "../../domain/calendar/entities/Task/CalendarTask";
 import { CalendarElement } from "../../domain/calendar/values-object/CalendarElement";
+import {
+  addMinutes,
+  diffMinutes,
+  diffMinutes2,
+  findOverlappingTasks,
+} from "../../domain/tools/tools";
 import { CssWeekHeader } from "../../shared/Css";
 
 export class CalendarBodyColumn extends CalendarElement {
@@ -34,40 +40,62 @@ export class CalendarBodyColumn extends CalendarElement {
       this.getElement().classList.add("calendar__body_column--disabled");
   }
 
-  addTask(calendarTask: CalendarTask) {
-    this.getElement().append(calendarTask.getElement());
-    this.taskList.push(calendarTask);
-    const taskintercepts = this.taskList
+  getIntercepters(_task: CalendarTask) {
+    return this.taskList
       .filter((task) =>
         this.checkOverlap(
           task.getStartTime(),
           task.getEndTime(),
-          calendarTask.getStartTime(),
-          calendarTask.getEndTime()
+          _task.getStartTime(),
+          _task.getEndTime()
         )
       )
       ?.sort((a, b) => a.getStartTime().localeCompare(b.getStartTime()));
-    
-    if (taskintercepts.length > 1) {
-      taskintercepts.forEach((task, index) => {
-          const element = task.getElement();
-        if (index != 0) {
-            if (task.getStartTime() > taskintercepts[index-1].getStartTime() ) {
-                //taskintercepts[index-1].getElement().style.width = `${100 / taskintercepts.length}%`;
-                element.style.width = `100%`;
-            } else {
-                taskintercepts[index-1].getElement().style.width = `${100 / taskintercepts.length}%`;
-                taskintercepts[index-1].getElement().style.left = `${(100 / taskintercepts.length) * index}%`;
-            }
-        }
-        element.style.zIndex = (index + 2).toString();
-      });
+  }
 
-    //   taskintercepts.reduce((prev, current) => {
-    //     prev.getElement().style.borderRight = "none";
-    // });
-    }
-    //console.log("add task")
+  renderTasks(tasks: CalendarTask[]) {
+    tasks.forEach((task) => {
+      this.getElement().append(task.getElement());
+    });
+  }
+
+  addTask(taskOrTasks: CalendarTask | CalendarTask[]) {
+    const tasks = Array.isArray(taskOrTasks) ? taskOrTasks : [taskOrTasks];
+    this.taskList = [...this.taskList, ...tasks].sort((a, b) =>
+      a.getStartTime().localeCompare(b.getStartTime()));
+
+    let zIndex = 2;
+    console.log("this.taskList", this.taskList.map((x) => x.getStartTime()+'-'+x.getEndTime()).join("\n"));
+    this.taskList.forEach((task) => {
+      let taskIntercepts = this.getIntercepters(task);
+      if (taskIntercepts.length <= 1) {
+        return;
+      }
+      console.log(`TaskIntercepts: \n ${taskIntercepts.map(x => x.getStartTime()+' - '+x.getEndTime()).join('\n')}`);
+      taskIntercepts.forEach((task, index) => {
+        const element = task.getElement();
+        const startTime = task.getStartTime();
+        const interceptsAux = [...taskIntercepts];
+        interceptsAux.splice(index, 1);
+        const hasFullWidth = interceptsAux.every(
+          (x) => Math.abs(diffMinutes(x.getStartTime(), startTime)) > 5
+        );
+        if (hasFullWidth) {
+          element.style.width = `97%`;
+          element.style.left = `2%`;
+          taskIntercepts.splice(index, 1);
+        }
+        element.style.zIndex = zIndex.toString();
+        zIndex++;
+        //console.log("taskIntercepts", task.getStartTime(), '-', task.getEndTime());
+      });
+      taskIntercepts.forEach((task, index) => {
+        const element = task.getElement();
+        element.style.width = `${100 / taskIntercepts.length}%`;
+        element.style.left = `${(100 / taskIntercepts.length) * index}%`;
+      });
+    });
+    this.renderTasks(tasks);
   }
 
   parseTime(time: string): Date {
@@ -88,6 +116,6 @@ export class CalendarBodyColumn extends CalendarElement {
     const startTime2 = this.parseTime(start2);
     const endTime2 = this.parseTime(end2);
     // Verificamos si los intervalos se solapan
-    return startTime1 < endTime2 && startTime2 < endTime1;
+    return startTime1 < endTime2 && endTime1 > startTime2;
   }
 }

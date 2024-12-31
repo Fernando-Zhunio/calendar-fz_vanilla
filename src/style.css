@@ -348,21 +348,24 @@ button:disabled.is-loading::after,
   z-index: 1;
   pointer-events: all;
   transition: height 0.3s;
-  padding: 1px;
+  padding: 3px;
   box-sizing: border-box;
 }
 
 .calendar__body_task_content {
   background-color: aquamarine;
-  border-radius: 10px;
+  border-radius: 5px;
   box-sizing: border-box;
   height: 100%;
-  border : 1px solid #dadada;
+  border : 1px solid #6e6b6b;
   white-space: nowrap;
   overflow: hidden;
   padding: 3px;
   animation: scale-up-center-normal 1s cubic-bezier(0.680, -0.550, 0.265, 1.550) 0s 1 normal forwards; 
+}
 
+.calendar__body_task_content_hour {
+  font-size: 12px;
 }
 
 /* ----------------------------------------------

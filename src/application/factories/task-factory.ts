@@ -19,6 +19,15 @@ export class TaskFactory {
     this.assignDayColumnTask(task, calendar);
   }
 
+  static createTasks(tasks: CalendarTask[], scope: ScopeCalendar) {
+    const calendar = scope.getValue<CalendarFz>(ScopeTokens.CALENDAR);
+    tasks.forEach((task) => {
+      this.generatePositionAndHeightTask(task, calendar);
+      //this.assignDayColumnTask(task, calendar);
+    });
+    this.assignDayColumnTasks(tasks, calendar);
+  }
+
   private static assignDayColumnTask(task: CalendarTask, calendar: CalendarFz) {
     if (calendar.typeView == TypesView.weeks) {
       const body = calendar.view.getBody() as CalendarWeekBody;
@@ -30,8 +39,36 @@ export class TaskFactory {
         console.log('La tarea no esta en el rango de fecha de la vista');
         return;
       }
-      
         columnDay.addTask(task);
+    }
+  }
+
+  private static assignDayColumnTasks(tasks: CalendarTask[], calendar: CalendarFz) {
+    if (calendar.typeView == TypesView.weeks) {
+      const body = calendar.view.getBody() as CalendarWeekBody;
+      const days = body.bodyColumns.getDays();
+      const tasksObjects: {[key: string]: CalendarTask[]} = {}; 
+      tasks.forEach(task => {
+        const key = task.getDate().toLocaleDateString();
+        const columnDay = days
+          .get(key);
+        if (!columnDay) {
+          console.warn(`CalendarFz: La tarea con fecha ${key} no esta en el rango de fecha de la vista`);
+        } else {
+          if (!tasksObjects[key]) {
+            tasksObjects[key] = [];
+          }
+          tasksObjects[key].push(task) ;
+        }
+      });
+      Object.keys(tasksObjects).forEach(key => {
+        const columnDay = days.get(key)!;
+        columnDay.addTask(tasksObjects[key]);
+        // tasksObjects[key].forEach(task => {
+        //   columnDay.addTask(task);
+        // });
+      });
+        //columnDay.addTask(task);
     }
   }
 

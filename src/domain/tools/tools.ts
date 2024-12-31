@@ -1,4 +1,5 @@
 import { Hour } from "../../application-contract/hour";
+import { CalendarTask } from "../calendar/entities/Task/CalendarTask";
 
 export enum TypesView {
   days = "days",
@@ -150,7 +151,7 @@ export function getPixelsForMinutes(heightRow: number, intervalMinutes: number) 
  * @param {string} endTime - The end time.
  * @returns {number} The difference in minutes.
  */
-function diffMinutes(startTime: string, endTime: string) {
+export function diffMinutes(startTime: string, endTime: string) {
   const start = startTime.split(":").map(Number);
   const end = endTime.split(":").map(Number);
   return (end[0] - start[0]) * 60 + (end[1] - start[1]);
@@ -194,4 +195,81 @@ export function sanitizeHTML(input: string) {
   
   // Devuelve el contenido limpio como HTML
   return doc.body.innerHTML;
+}
+
+
+export function addMinutes(hora: Hour, minutesToAdd: number): Hour {
+  // Separar la hora y los minutos
+  let [horas, minutos] = hora.split(':').map(num => parseInt(num));
+  // Sumar los minutos
+  minutos += minutesToAdd;
+  // Convertir los minutos en horas y minutos (en caso de que pase de 60)
+  while (minutos >= 60) {
+      minutos -= 60;
+      horas++;
+  }
+  // Asegurarse de que las horas estén en formato de 24 horas
+  if (horas >= 24) {
+      horas -= 24;
+  }
+  // Formatear la hora y los minutos para que siempre tengan 2 dígitos
+  const hours = String(horas).padStart(2, '0');
+  const minutes = String(minutos).padStart(2, '0');
+  // Retornar la hora en formato 'HH:MM'
+  return `${hours}:${minutes}` as Hour;
+}
+
+export function diffMinutes2(hour1: Hour, hour2: Hour): number {
+  // Convertir las horas 'HH:MM' a minutos
+  const [horas1, minutos1] = hour1.split(':').map(num => parseInt(num));
+  const [horas2, minutos2] = hour2.split(':').map(num => parseInt(num));
+
+  // Convertir a minutos totales desde medianoche
+  const totalMinutos1 = horas1 * 60 + minutos1;
+  const totalMinutos2 = horas2 * 60 + minutos2;
+
+  // Calcular la diferencia en minutos
+  let diferencia = totalMinutos2 - totalMinutos1;
+
+  // Si la diferencia es negativa, ajustamos para el caso de pasar de un día a otro
+  if (diferencia < 0) {
+      diferencia += 24 * 60; // Añadimos 24 horas en minutos
+  }
+
+  return diferencia;
+}
+
+function timeToMinutes(time:Hour) {
+  const [hour, minute] = time.split(":").map(Number);
+  return hour * 60 + minute;
+}
+
+function isOverlapping(start1: number, end1: number, start2: number, end2: number) {
+  // Verifica si los intervalos se solapan
+  return (start1 < end2 && end1 > start2);
+}
+// Función para encontrar las tareas que se solapan
+export function findOverlappingTasks(tasks: CalendarTask[]) {
+  const overlaps = [];
+
+  // Compara todas las tareas entre sí
+  for (let i = 0; i < tasks.length; i++) {
+    const task1 = tasks[i];
+    const start1 = timeToMinutes(task1.getStartTime());
+    const end1 = timeToMinutes(task1.getEndTime());
+
+    for (let j = i + 1; j < tasks.length; j++) {
+      const task2 = tasks[j];
+      const start2 = timeToMinutes(task2.getStartTime());
+      const end2 = timeToMinutes(task2.getEndTime());
+
+      // Si las tareas se solapan, agregar a la lista de solapamientos
+      if (isOverlapping(start1, end1, start2, end2)) {
+        overlaps.push(task1);
+        overlaps.push(task2);
+      }
+    }
+  }
+
+  return overlaps;
 }

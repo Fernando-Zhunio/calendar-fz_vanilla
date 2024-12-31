@@ -50,14 +50,16 @@ export class CalendarFz {
     // CommunicationService.registerCalendar(this.calendarId, this);
     this.changeView(TypesView.weeks);
     this.assignClassCss();
-    const task = new CalendarTask(new Date('12-12-2024'), '11:00', '15:00', { templateOrTitle: 'Task 1' });
+    const task = new CalendarTask(new Date('12-12-2024'), '10:00', '15:00', { templateOrTitle: 'Task 1' });
     const task1 = new CalendarTask(new Date('12-12-2024'), '11:00', '15:00', { templateOrTitle: 'Task 1' });
-    const task2 = new CalendarTask(new Date('12-12-2024'), '12:00', '16:00', { templateOrTitle: 'Task 1' });
+    const task2 = new CalendarTask(new Date('12-12-2024'), '11:30', '11:50', { templateOrTitle: 'Task 1' });
     const task3 = new CalendarTask(new Date('12-12-2024'), '08:00', '11:01', { templateOrTitle: 'Task 1' });
-    this.addTask(task)
-    this.addTask(task1)
-    this.addTask(task2)
-    this.addTask(task3)
+    const task4 = new CalendarTask(new Date('12-12-2024'), '16:00', '17:00', { templateOrTitle: 'Task 1' });
+    const task5 = new CalendarTask(new Date('12-12-2024'), '16:00', '19:00', { templateOrTitle: 'Task 1' });
+    this.addTasks([task,task1,task2,task3, task4, task5]);
+    // this.addTask(task1)
+    // this.addTask(task2)
+    // this.addTask(task3)
   }
 
   registerScopes() {
@@ -161,6 +163,14 @@ export class CalendarFz {
     //task.update();
     //this.view.addTask(task);
     TaskFactory.createTask(task, this.scope);
+  }
+
+  addTasks(tasks: CalendarTask[]) {
+    // debugger;
+    //task.setCalendarId(this.getId());
+    //task.update();
+    //this.view.addTask(task);
+    TaskFactory.createTasks(tasks, this.scope);
   }
 
   getData() {
