@@ -1,5 +1,6 @@
 import { Hour } from "../../../../application-contract/hour";
 import { CommunicationService } from "../../../../application/CommunicationService";
+import { ScopeCalendar } from "../../../../infraestructure/dependency-container";
 import { generateUuid, sanitizeHTML } from "../../../tools/tools";
 import { CalendarTaskActions } from "./CalendarTaskActions";
 import { CalendarTaskDuration } from "./CalendarTaskDuration";
@@ -35,6 +36,7 @@ export class CalendarTask {
   private calendarId: any;
 
   taskDuration!: CalendarTaskDuration;
+  private scope!: ScopeCalendar;
   constructor(
     protected date: Date,
     protected startTime: Hour,
@@ -50,6 +52,14 @@ export class CalendarTask {
     } else {
       this.element.innerHTML = this.generateTemplateDefault();
     }
+  }
+
+  setScope(scope:ScopeCalendar){
+    this.scope = scope;
+  }
+
+  getScope() {
+    return this.scope;
   }
 
   generateTemplateDefault() {
@@ -85,6 +95,7 @@ export class CalendarTask {
   
   private assignClassCssAndAttributes() {
     this.element.classList.add("calendar__body_task");
+    this.element.classList.add("calendar__task_animation");
     this.elementScaleY.classList.add("calendar__body_task_scaleY");
   }
   

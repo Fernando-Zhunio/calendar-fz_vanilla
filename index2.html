@@ -5,75 +5,80 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
     <style>
-      body,
-      html {
-        background: black;
+      #parent {
+        overflow: hidden;
       }
 
-      body {
-        background: #000;
-        position: relative;
-        min-height: 720px;
-      }
-
-      .resizable {
-        background: white;
-        width: 100px;
-        height: 100px;
-        position: absolute;
-        top: 100px;
-        left: 100px;
-        transition: height 0.15s ease-out;
-      }
-
-      /* .resizable .resizers {
-        width: 100%;
-        height: 100%;
-        border: 3px solid #4286f4;
-        box-sizing: border-box;
-      } */
-
-      .resizable .resizers .resizer {
-        width: 10px;
-        height: 10px;
-        border-radius: 50%; /*magic to turn square into circle*/
-        background: white;
-        border: 3px solid #4286f4;
-        position: absolute;
-      }
-
-      .resizable .resizers .resizer.top-left {
-        left: -5px;
-        top: -5px;
-        cursor: nwse-resize; /*resizer cursor*/
-      }
-      .resizable .resizers .resizer.top-right {
-        right: -5px;
-        top: -5px;
-        cursor: nesw-resize;
-      }
-      .resizable .resizers .resizer.bottom-left {
-        left: -5px;
-        bottom: -5px;
-        cursor: nesw-resize;
-      }
-      .resizable .resizers .resizer.bottom-right {
-        right: -5px;
-        bottom: -5px;
-        cursor: ns-resize;
+      #child {
+        cursor: pointer;
       }
     </style>
   </head>
   <body>
-    <div class="resizable">
-      <div class="resizers">
-        <!-- <div class="resizer top-left"></div>
-        <div class="resizer top-right"></div>
-        <div class="resizer bottom-left"></div> -->
-        <div class="resizer bottom-right"></div>
-      </div>
+    <div
+      id="parent"
+      style="
+        width: 300px;
+        height: 300px;
+        border: 1px solid black;
+        position: relative;
+      ">
+      <p
+        id="child"
+        draggable="true"
+        style="
+          width: 100px;
+          height: 30px;
+          background-color: lightblue;
+          text-align: center;
+          position: absolute;
+          top: 50px;
+          left: 50px;
+        ">
+        Arrástrame
+      </p>
     </div>
+    <script>
+      const child = document.getElementById("child");
+      const parent = document.getElementById("parent");
 
-    <script src="script.js"></script>
+      // Definir las 7 columnas
+      const numColumns = 7;
+      const columnWidth = parent.offsetWidth / numColumns;
+
+      // Hacer el elemento draggable
+      child.addEventListener("dragstart", (e) => {
+        // Evitar que el navegador cree una copia fantasma del elemento
+        e.dataTransfer.setData("text", "child");
+        e.dataTransfer.effectAllowed = "move";
+
+        // Usar un "drag image" vacío para eliminar el efecto visual de la copia fantasma
+        const img = new Image();
+        e.dataTransfer.setDragImage(img, 0, 0); // Se pasa una imagen vacía
+      });
+
+      // Mientras se arrastra, calcular la columna más cercana
+      parent.addEventListener("dragover", (e) => {
+        console.log(parent)
+        e.preventDefault(); // Necesario para permitir el drop
+
+        const mouseX = e.clientX;
+
+        // Calcular la columna más cercana
+        let column = Math.floor(mouseX / columnWidth);
+
+        // Limitar el valor de la columna entre 0 y 6 (ya que tenemos 7 columnas)
+        column = Math.min(Math.max(column, 0), numColumns - 1);
+
+        // Mover el elemento al inicio de la columna más cercana
+        child.style.left = `${column * columnWidth}px`;
+      });
+
+      // Evento cuando se suelta el elemento
+      parent.addEventListener("drop", (e) => {
+        e.preventDefault();
+        // No es necesario hacer nada más aquí ya que el posicionamiento ya se calculó en dragover
+      });
+    </script>
   </body>
 </html>

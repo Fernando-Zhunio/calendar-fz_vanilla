@@ -46,8 +46,10 @@ export class CalendarWeek implements IViewWeek {
     this.body.bodyColumns.previousBody();
   }
 
-  changeInterval(_interval: number): void {
-    throw new Error("Method not implemented.");
+  changeInterval(interval: number): void {
+    this.options.intervalMinutes = interval;
+    debugger;
+    this.body.bodyRows.initRows();
   }
 
   getBody(): ICalendarBody {

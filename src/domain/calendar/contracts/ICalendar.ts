@@ -1,21 +1,17 @@
-import { CalendarBodyBackdrop } from "../entities/CalendarBodyBackdrop";
-import { CalendarBodyColumn } from "../entities/CalendarBodyColumn";
-import { CalendarBodyRow } from "../entities/CalendarBodyRow";
+import { Hour } from "../../../application-contract/hour";
+import { TypesView } from "../../tools/tools";
 import { CalendarTask } from "../entities/Task/CalendarTask";
-
 export interface IWeekViewOptions extends IViewOptions {
   omitDays: (0 | 1 | 2 | 3 | 4 | 5 | 6 | 7)[];
   disabledDays: (0 | 1 | 2 | 3 | 4 | 5 | 6 | 7)[];
   startDay: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7;
   sprintDays: 1 | 2 | 3 | 4 | 5 | 6 | 7;
 }
-
 export interface IViewOptions {
-  // currentDate: Date;
   startDate: Date;
   intervalMinutes: number;
-  startTime: string;
-  endTime: string;
+  startTime: Hour;
+  endTime: Hour;
   idFormCreateOrEditTask: string;
   heightRow: number;
   cbRemoveTask: (task: CalendarTask) => Promise<any>;
@@ -26,11 +22,30 @@ export interface IDayViewOptions extends IViewOptions {
   gL: string;
 }
 
-const defaultViewOptions = {
+export interface IMonthViewOptions extends IViewOptions {
+  gL: string;
+}
+
+
+
+type Period = TypesView;
+
+export type OptionsCalendar<T extends Period> = T extends TypesView.weeks
+  ? IWeekViewOptions
+  : T extends TypesView.days
+  ? IDayViewOptions
+  : T extends TypesView.months
+  ? IMonthViewOptions
+  : never;
+
+
+//#region Data default
+export const defaultViewOptions = {
   startDate: new Date(),
   intervalMinutes: 15,
-  startTime: "01:00",
-  endTime: "30:00",
+  startTime: "01:00" as Hour,
+  endTime: "24:00" as Hour,
+  heightRow: 36,
 };
 
 export const defaultDayViewOptions = { ...defaultViewOptions, ...{} };
@@ -42,10 +57,10 @@ export const defaultWeekViewOptions: IWeekViewOptions = {
   startDay: 1,
   sprintDays: 7,
   idFormCreateOrEditTask: "",
-  heightRow: 36,
   cbRemoveTask: fetchGet,
   cbEditTask: fetchGet,
 };
+//#endregion
 
 async function fetchGet(task: CalendarTask): Promise<any> {
   return await fetch("https://jsonplaceholder.typicode.com/todos/1")
@@ -69,16 +84,15 @@ export interface IHeaderCalendar {
 //   getBackdrop(): CalendarBodyBackdrop;
 // }
 
-export interface ICalendarDataWeek extends ICalendarData {
-  startDate: Date;
-  endDate: Date;
-}
+// export interface ICalendarDataWeek extends ICalendarData {
+//   startDate: Date;
+//   endDate: Date;
+// }
 
-export interface ICalendarData {}
 
-export interface ICalendar {
-  render(args?: any): void;
-  addTask(): void;
-  listEvent: any;
-  next(): void;
-}
+// export interface ICalendar {
+//   render(args?: any): void;
+//   addTask(): void;
+//   listEvent: any;
+//   next(): void;
+// }

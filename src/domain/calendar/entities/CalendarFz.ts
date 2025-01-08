@@ -11,68 +11,75 @@ import {
   defaultDayViewOptions,
 } from "../contracts/ICalendar";
 import { TypesCalendarEvent } from "../contracts/IEventsCalendar";
-// import { CalendarTaskMovement } from "../values-object/CalendarTaskMovement";
-// import { CalendarWeekView } from "../values-object/CalendarWeekView";
 import { IView } from "./iview";
 import { CalendarTask } from "./Task/CalendarTask";
 
 export class CalendarFz {
   view!: IView;
-  typeView: TypesView = TypesView.weeks;
   formCreateOrEditTask!: PopoverContent;
   private element: HTMLElement;
   scope = new ScopeCalendar();
+  private options!: IWeekViewOptions | IDayViewOptions;
 
   constructor(
     querySelector: string,
-    private options?: Partial<IWeekViewOptions | IDayViewOptions>
+    private typeView: TypesView = TypesView.weeks,
+    options?: Partial<IWeekViewOptions | IDayViewOptions>,
   ) {
+
     this.element = document.querySelector(querySelector)!;
     if (!this.element) {
       throw new Error("Element not found");
     }
+
+    this.defaultOptions(options || {});
+    this.validations();
+    this.changeHeightRow(this.options.heightRow);
     this.init();
     // Popover.init();
     // if (options?.idFormCreateOrEditTask)
     //   this.setEnabledPopupInput(options?.idFormCreateOrEditTask)
-    if (options?.heightRow) this.changeHeightRow(options.heightRow);
+    
     // this.calendarMovements = new CalendarTaskMovement(this);
+  }
+
+  getTypeView() {
+    return this.typeView;
+  }
+
+  defaultOptions(options: Partial<IWeekViewOptions | IDayViewOptions>) {
+    if (this.typeView === TypesView.weeks) {
+      this.options = { ...defaultWeekViewOptions, ...options } as IWeekViewOptions;
+    } else if (this.typeView === TypesView.days) {
+      this.options = { ...defaultDayViewOptions, ...options } as IDayViewOptions;
+    }
   }
 
   assignClassCss() {
     this.element.classList.add("calendar-fz");
   }
 
+  validations() {
+    const { intervalMinutes, startTime, endTime } = this.options!;
+    if (startTime >= endTime) throw new Error("The start time must be less than the end time");
+    if (intervalMinutes <= 0) throw new Error("The interval must be greater than 0");
+    const start = startTime.split(":").map(Number);
+    if (start[0] < 0 || start[0] > 22) throw new Error("The start time must be between 00:00 and 22:59");
+    const end = endTime.split(":").map(Number);
+    if ((end[0] < 1 || end[0] > 24)  ) throw new Error("The end time must be between 01:00 and 24:00");
+    if (end[0] === 24 && end[1] > 0) throw new Error("The end time must be between 01:00 and 24:00");
+  }
+
   init() {
     this.registerScopes();
-    // this.registersContainer();
-    // this.element.setAttribute("calendar-id", this.calendarId);
-    // CommunicationService.registerCalendar(this.calendarId, this);
-    this.changeView(TypesView.weeks);
+    this.changeView(this.typeView);
     this.assignClassCss();
-    const task = new CalendarTask(new Date('12-12-2024'), '10:00', '15:00', { templateOrTitle: 'Task 1' });
-    const task1 = new CalendarTask(new Date('12-12-2024'), '11:00', '15:00', { templateOrTitle: 'Task 1' });
-    const task2 = new CalendarTask(new Date('12-12-2024'), '11:30', '11:50', { templateOrTitle: 'Task 1' });
-    const task3 = new CalendarTask(new Date('12-12-2024'), '08:00', '11:01', { templateOrTitle: 'Task 1' });
-    const task4 = new CalendarTask(new Date('12-12-2024'), '16:00', '17:00', { templateOrTitle: 'Task 1' });
-    const task5 = new CalendarTask(new Date('12-12-2024'), '16:00', '19:00', { templateOrTitle: 'Task 1' });
-    this.addTasks([task,task1,task2,task3, task4, task5]);
-    // this.addTask(task1)
-    // this.addTask(task2)
-    // this.addTask(task3)
   }
 
   registerScopes() {
     this.scope.setValue(ScopeTokens.CALENDAR, this);
     this.scope.setValue(ScopeTokens.OPTIONS, this.options);
   }
-
-  
-
-  // registersContainer() {
-  //   this.scope.registerSingleton(ConfigurationCalendar);
-  //   this.scope.registerSingleton<IView>(CalendarWeek, this.options, this.getElement());
-  // }
 
   changeHeightRow(height: number) {
     document.documentElement.style.setProperty(
@@ -180,6 +187,7 @@ export class CalendarFz {
   closePopup() {
     Popover.close();
   }
+
 }
 
 // class ConfigurationCalendar {

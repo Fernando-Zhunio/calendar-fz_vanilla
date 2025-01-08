@@ -35,35 +35,36 @@ export function getLabelMonths(monthNum: number) {
     "Diciembre",
   ][monthNum];
 }
+
 // export const HEIGHT_ROW_HOURS = 32;
-export function convertMinutesToPixels(minutes: number) {
-  return (minutes / 60) * 100;
+export function convertMinutesToPixels(minutes: number, heightRow: number, intervalMinutes: number) {
+  return (heightRow / intervalMinutes) * minutes;
 }
 
-function convertStringToMinutes(str: string) {
+function convertStringToMinutes(str: Hour) {
   const [hours, minutes] = str.split(":");
   return parseInt(hours) * 60 + parseInt(minutes);
 }
 
-function convertMinutesToString(minutes: number) {
+function convertNumberToHour(minutes: number): Hour {
   const hours = Math.floor(minutes / 60);
   const minutesLeft = minutes % 60;
   return `${hours.toString().padStart(2, "0")}:${minutesLeft
     .toString()
-    .padStart(2, "0")}`;
+    .padStart(2, "0")}` as Hour;
 }
 
 export function listHoursByInterval(
   intervalMinutes: number,
-  startHour: string,
-  endHour: string
+  startHour: Hour,
+  endHour: Hour
 ): string[] {
   const hours: string[] = [];
   const start = convertStringToMinutes(startHour);
   const end = convertStringToMinutes(endHour);
 
   for (let i = start; i < end; i += intervalMinutes) {
-    hours.push(convertMinutesToString(i));
+    hours.push(convertNumberToHour(i));
   }
 
   return hours;
@@ -144,6 +145,8 @@ export function calculeTopAndHeight(
 export function getPixelsForMinutes(heightRow: number, intervalMinutes: number) {
   return heightRow / intervalMinutes;
 }
+
+
 
 /**
  * Calculate the difference in minutes between two times given as strings in the format 'HH:mm'.

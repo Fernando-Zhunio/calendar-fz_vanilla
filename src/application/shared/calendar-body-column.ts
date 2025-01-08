@@ -1,10 +1,7 @@
 import { CalendarTask } from "../../domain/calendar/entities/Task/CalendarTask";
 import { CalendarElement } from "../../domain/calendar/values-object/CalendarElement";
 import {
-  addMinutes,
   diffMinutes,
-  diffMinutes2,
-  findOverlappingTasks,
 } from "../../domain/tools/tools";
 import { CssWeekHeader } from "../../shared/Css";
 

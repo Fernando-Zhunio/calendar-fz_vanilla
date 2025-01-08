@@ -347,9 +347,13 @@ button:disabled.is-loading::after,
   left: 0;
   z-index: 1;
   pointer-events: all;
-  transition: height 0.3s;
   padding: 3px;
   box-sizing: border-box;
+}
+.calendar__task_animation{
+  /* transition: height 0.3s; */
+  animation: scale-up-center-normal 1s cubic-bezier(0.680, -0.550, 0.265, 1.550) 0s 1 normal forwards; 
+
 }
 
 .calendar__body_task_content {
@@ -361,7 +365,6 @@ button:disabled.is-loading::after,
   white-space: nowrap;
   overflow: hidden;
   padding: 3px;
-  animation: scale-up-center-normal 1s cubic-bezier(0.680, -0.550, 0.265, 1.550) 0s 1 normal forwards; 
 }
 
 .calendar__body_task_content_hour {
