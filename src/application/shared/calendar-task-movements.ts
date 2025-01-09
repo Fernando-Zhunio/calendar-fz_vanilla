@@ -5,7 +5,7 @@ import { convertMinutesToPixels, TypesView } from "../../domain/tools/tools";
 import { ScopeCalendar, ScopeTokens } from "../../infraestructure/dependency-container";
 import { CalendarWeek } from "../week/calendar-week";
 
-const classSelector = 'calendar__body_task';
+//const classSelector = 'calendar__body_task';
 
 export class CalendarTaskMovements {
     parent!: HTMLElement;
@@ -61,7 +61,6 @@ export class CalendarTaskMovements {
       return newElement;
     }
 
-
     private onMouseDown(e: MouseEvent, task: CalendarTask) {
       e = e || window.event;
       e.preventDefault();
@@ -75,7 +74,7 @@ export class CalendarTaskMovements {
       this.childClone = this.copyElement(element, this.columnWidth);
       this.parent.appendChild(this.childClone);
       this.options = this.getOptions();
-      this.hits = convertMinutesToPixels(5,this.options.heightRow, this.options.intervalMinutes)
+      // this.hits = convertMinutesToPixels(5,this.options.heightRow, this.options.intervalMinutes)
 
       element.style.opacity = '0'
       // get the mouse cursor position at startup:
@@ -100,24 +99,33 @@ export class CalendarTaskMovements {
       this.positions.startClientX = e.clientX;
       this.positions.startClientY = e.clientY;
       let rectParent = this.parent.getBoundingClientRect();
+      let rectClone = this.childClone.getBoundingClientRect();
 
       let column = Math.floor((e.clientX - rectParent.x) / this.columnWidth)
-      
-      column = Math.min(Math.max(column, 0), this.numColumns - 1);
 
-      // let row = Math.floor((e.clientY - rectParent.y) / this.hits);
-      // let row = Math.min(this.childClone.offsetTop - this.positions.clientY,  rectParent.y + rectParent.height);
-      // set the element's new position:
-      this.childClone.style.top = this.childClone.offsetTop - this.positions.clientY + "px";
+      column = Math.min(Math.max(column, 0), this.numColumns - 1);
+      // console.log('Hola',this.childClone.offsetTop - this.positions.clientY)
+      // let row = Math.max(this.childClone.offsetTop - this.positions.clientY,  0);
+      // //row = Math.min(this.childClone.offsetTop - this.positions.clientY,  0);
+      // // this.childClone.style.top = this.childClone.offsetTop - this.positions.clientY + "px";
       // this.childClone.style.top = row + "px";
       this.childClone.style.left = `${column * this.columnWidth}px`;
+
+      console.log(rectClone.y - rectParent.y)
+      // test row 
+      const currentPosition = this.childClone.offsetTop - this.positions.clientY
+      let row = Math.max(currentPosition,  0);
+      //row = Math.min(this.childClone.offsetTop - this.positions.clientY,  0);
+      // this.childClone.style.top = this.childClone.offsetTop - this.positions.clientY + "px";
+      this.childClone.style.top = row + "px";
   }
 
-  private onMouseUp(e: MouseEvent) {
-      this.currentTask.getElement().style.opacity = '1'
-      this.childClone.remove();
-      (this.currentTask as any) = null;
-    
+  private onMouseUp(_e: MouseEvent) {
+      if(this.currentTask){
+        this.currentTask.getElement().style.opacity = '1'
+        this.childClone.remove();
+        (this.currentTask as any) = null;
+      }
   }
 }
 
