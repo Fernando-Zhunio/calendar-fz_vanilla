@@ -20,10 +20,10 @@ export class CalendarTaskMovements {
     hits: number = 0;
     childClone!: HTMLElement
     positions = {
-      clientX: 0,
-      clientY: 0,
-      startClientX: 0,
-      startClientY: 0
+      currentX: 0,
+      currentY: 0,
+      startX: 0,
+      startY: 0
     };
 
     constructor() {
@@ -78,8 +78,8 @@ export class CalendarTaskMovements {
 
       element.style.opacity = '0'
       // get the mouse cursor position at startup:
-      this.positions.startClientX = e.clientX;
-      this.positions.startClientY = e.clientY;
+      this.positions.startX = e.clientX;
+      this.positions.startY = e.clientY;
 
       let rectParent = this.parent.getBoundingClientRect();
       let column = Math.floor((e.clientX - rectParent.x) / this.columnWidth)
@@ -94,10 +94,10 @@ export class CalendarTaskMovements {
       e.preventDefault();
       if (!this.currentTask) return
       // calculate the new cursor position:
-      this.positions.clientX = this.positions.startClientX - e.clientX;
-      this.positions.clientY = this.positions.startClientY - e.clientY;
-      this.positions.startClientX = e.clientX;
-      this.positions.startClientY = e.clientY;
+      this.positions.currentX = this.positions.startX - e.clientX;
+      this.positions.currentY = this.positions.startY - e.clientY;
+      this.positions.startX = e.clientX;
+      this.positions.startY = e.clientY;
       let rectParent = this.parent.getBoundingClientRect();
       let rectClone = this.childClone.getBoundingClientRect();
 
@@ -113,7 +113,7 @@ export class CalendarTaskMovements {
 
       console.log(rectClone.y - rectParent.y)
       // test row 
-      const currentPosition = this.childClone.offsetTop - this.positions.clientY
+      const currentPosition = this.childClone.offsetTop - this.positions.currentY
       let row = Math.max(currentPosition,  0);
       //row = Math.min(this.childClone.offsetTop - this.positions.clientY,  0);
       // this.childClone.style.top = this.childClone.offsetTop - this.positions.clientY + "px";
