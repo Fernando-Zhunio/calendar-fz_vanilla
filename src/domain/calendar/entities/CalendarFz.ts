@@ -3,12 +3,13 @@ import { CalendarWeek } from "../../../application/week/calendar-week";
 import { ScopeCalendar, ScopeTokens } from "../../../infraestructure/dependency-container";
 import { Popover } from "../../popover/Popover";
 import { PopoverContent } from "../../popover/PopoverContent";
-import { TypesView } from "../../tools/tools";
+import { CalendarEvents, TypesView } from "../../tools/tools";
 import {
   IDayViewOptions,
   IWeekViewOptions,
   defaultWeekViewOptions,
   defaultDayViewOptions,
+  IEventData,
 } from "../contracts/ICalendar";
 import { TypesCalendarEvent } from "../contracts/IEventsCalendar";
 import { IView } from "./iview";
@@ -104,14 +105,14 @@ export class CalendarFz {
   //   Popover.open(e.detail.event.clientX, e.detail.event.clientY, this.contentClickRow);
   // }
 
-  addEventListener(
-    typesCalendarEvent: TypesCalendarEvent,
-    callback: (e: any) => void
-  ) {
-    document.addEventListener(typesCalendarEvent, (e: any) =>
-      callback(e.detail)
-    );
-  }
+  // addEventListener(
+  //   typesCalendarEvent: TypesCalendarEvent,
+  //   callback: (e: any) => void
+  // ) {
+  //   document.addEventListener(typesCalendarEvent, (e: any) =>
+  //     callback(e.detail)
+  //   );
+  // }
 
   getElement() {
     return this.element;
@@ -165,27 +166,25 @@ export class CalendarFz {
   }
 
   addTask(task: CalendarTask) {
-    // debugger;
-    //task.setCalendarId(this.getId());
-    //task.update();
-    //this.view.addTask(task);
     TaskFactory.createTask(task, this.scope);
   }
 
   addTasks(tasks: CalendarTask[]) {
-    // debugger;
-    //task.setCalendarId(this.getId());
-    //task.update();
-    //this.view.addTask(task);
     TaskFactory.createTasks(tasks, this.scope);
   }
 
-  getData() {
-    this.view.getData();
-  }
+  // getData() {
+  //   this.view.getData();
+  // }
 
   closePopup() {
     Popover.close();
+  }
+
+  addEventListener<E extends CalendarEvents>(event: E, callback: (e: IEventData<E>) => void): void {
+    document.addEventListener(event, (e: any) =>
+      callback(e.detail)
+    );
   }
 
 }

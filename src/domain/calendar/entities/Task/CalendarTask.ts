@@ -1,4 +1,4 @@
-import { Hour } from "../../../../application-contract/hour";
+import { Time } from "../../../../application-contract/hour";
 import { CommunicationService } from "../../../../application/CommunicationService";
 import { ScopeCalendar } from "../../../../infraestructure/dependency-container";
 import { generateUuid, sanitizeHTML } from "../../../tools/tools";
@@ -19,8 +19,8 @@ export interface IOptionsTask {
 }
 
 export class CalendarTask {
-  element = document.createElement("div");
-  taskId!: string;
+  private readonly element = document.createElement("div");
+  private taskId: Symbol = Symbol();
 
   elementScaleY = document.createElement("div");
   taskActions!: CalendarTaskActions
@@ -39,8 +39,8 @@ export class CalendarTask {
   private scope!: ScopeCalendar;
   constructor(
     protected date: Date,
-    protected startTime: Hour,
-    protected endTime: Hour,
+    protected startTime: Time,
+    protected endTime: Time,
     protected options: IOptionsTask = { templateOrTitle: "", isTemplate: false },
   ) {
     this.assignClassCssAndAttributes();
@@ -53,6 +53,7 @@ export class CalendarTask {
       this.element.innerHTML = this.generateTemplateDefault();
     }
   }
+
 
   setScope(scope:ScopeCalendar){
     this.scope = scope;
@@ -99,19 +100,19 @@ export class CalendarTask {
     this.elementScaleY.classList.add("calendar__body_task_scaleY");
   }
   
-  updateId(){
-    this.taskId = generateUuid();
-    this.element.setAttribute("task-id", this.taskId);
-  }
+  // updateId(){
+  //   this.taskId = generateUuid();
+  //   this.element.setAttribute("task-id", this.taskId);
+  // }
 
   getDate() {
     return this.date;
   }
 
-  getStartTime(): Hour {
+  getStartTime(): Time {
     return this.startTime;
   }
-  getEndTime(): Hour {
+  getEndTime(): Time {
     return this.endTime;
   }
 

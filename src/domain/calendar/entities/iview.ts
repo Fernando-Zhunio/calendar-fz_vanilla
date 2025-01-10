@@ -1,5 +1,6 @@
-import { ICalendarDataWeek } from "../contracts/ICalendar"
+// import { CalendarHeaderColumn } from "./CalendarHeaderColumn"
 // import { CalendarBodyBackdrop } from "./CalendarBodyBackdrop"
+import { CalendarHeaderColumn } from "../../../application/shared/calendar-header-column"
 import { CalendarTask } from "./Task/CalendarTask"
 
 export interface IView {
@@ -8,7 +9,7 @@ export interface IView {
     previous(): void
     changeInterval(interval: number): void
     getBody(): ICalendarBody
-    getData(): ICalendarDataWeek 
+    // getData(): ICalendarDataWeek 
     addTask(task: CalendarTask): void
     goDate(date: Date): void
     getHeader(): ICalendarHeader
@@ -23,9 +24,11 @@ export interface ICalendarHeader {
     goDate(date: Date): void
     next(): void
     previous(): void
+    getColumns():CalendarHeaderColumn[]
 }
 
 export interface ICalendarBody {
     nextBody(): void
     previousBody(): void
+    removeTask(task: CalendarTask): boolean
 }

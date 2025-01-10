@@ -1,12 +1,10 @@
 import { CalendarTask } from "../../domain/calendar/entities/Task/CalendarTask";
 import { CalendarElement } from "../../domain/calendar/values-object/CalendarElement";
-import {
-  diffMinutes,
-} from "../../domain/tools/tools";
+import { diffTime } from "../../domain/tools/tools";
 import { CssWeekHeader } from "../../shared/Css";
 
 export class CalendarBodyColumn extends CalendarElement {
-  taskList: CalendarTask[] = [];
+  tasks: CalendarTask[] = [];
   constructor(private date: Date, protected isDisabled: boolean) {
     super();
     this.assignStylesCss();
@@ -38,7 +36,7 @@ export class CalendarBodyColumn extends CalendarElement {
   }
 
   getIntercepters(_task: CalendarTask) {
-    return this.taskList
+    return this.tasks
       .filter((task) =>
         this.checkOverlap(
           task.getStartTime(),
@@ -56,26 +54,41 @@ export class CalendarBodyColumn extends CalendarElement {
     });
   }
 
+  removeTask(taskId: Symbol): boolean {
+    debugger;
+    const index = this.tasks.findIndex((x) => x.getId() == taskId);
+    if (index == -1) {
+      return false;
+    } else {
+      this.tasks.splice(index, 1);
+      this.tasks[index].delete();
+      return true;
+    }
+  }
+
   addTask(taskOrTasks: CalendarTask | CalendarTask[]) {
     const tasks = Array.isArray(taskOrTasks) ? taskOrTasks : [taskOrTasks];
-    this.taskList = [...this.taskList, ...tasks].sort((a, b) =>
-      a.getStartTime().localeCompare(b.getStartTime()));
+    this.tasks = [...this.tasks, ...tasks].sort((a, b) =>
+      a.getStartTime().localeCompare(b.getStartTime())
+    );
 
     let zIndex = 2;
-    console.log("this.taskList", this.taskList.map((x) => x.getStartTime()+'-'+x.getEndTime()).join("\n"));
-    this.taskList.forEach((task) => {
+    console.log(
+      "this.taskList",
+      this.tasks.map((x) => x.getStartTime() + "-" + x.getEndTime()).join("\n")
+    );
+    this.tasks.forEach((task) => {
       let taskIntercepts = this.getIntercepters(task);
       if (taskIntercepts.length <= 1) {
         return;
       }
-      console.log(`TaskIntercepts: \n ${taskIntercepts.map(x => x.getStartTime()+' - '+x.getEndTime()).join('\n')}`);
       taskIntercepts.forEach((task, index) => {
         const element = task.getElement();
         const startTime = task.getStartTime();
         const interceptsAux = [...taskIntercepts];
         interceptsAux.splice(index, 1);
         const hasFullWidth = interceptsAux.every(
-          (x) => Math.abs(diffMinutes(x.getStartTime(), startTime)) > 5
+          (x) => Math.abs(diffTime(x.getStartTime(), startTime)) > 5
         );
         if (hasFullWidth) {
           element.style.width = `97%`;

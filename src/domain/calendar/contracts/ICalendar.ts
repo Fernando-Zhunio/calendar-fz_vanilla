@@ -1,5 +1,5 @@
-import { Hour } from "../../../application-contract/hour";
-import { TypesView } from "../../tools/tools";
+import { Time } from "../../../application-contract/hour";
+import { CalendarEvents, TypesView } from "../../tools/tools";
 import { CalendarTask } from "../entities/Task/CalendarTask";
 export interface IWeekViewOptions extends IViewOptions {
   omitDays: (0 | 1 | 2 | 3 | 4 | 5 | 6 | 7)[];
@@ -10,12 +10,13 @@ export interface IWeekViewOptions extends IViewOptions {
 export interface IViewOptions {
   startDate: Date;
   intervalMinutes: number;
-  startTime: Hour;
-  endTime: Hour;
+  startTime: Time;
+  endTime: Time;
   idFormCreateOrEditTask: string;
   heightRow: number;
   cbRemoveTask: (task: CalendarTask) => Promise<any>;
   cbEditTask: (task: CalendarTask) => Promise<any>;
+  cbChangePositionTask:(taskOld: CalendarTask,taskNew: CalendarTask) => Promise<boolean>
 }
 
 export interface IDayViewOptions extends IViewOptions {
@@ -38,13 +39,24 @@ export type OptionsCalendar<T extends Period> = T extends TypesView.weeks
   ? IMonthViewOptions
   : never;
 
+export type IEventData<T extends CalendarEvents> = T extends CalendarEvents.ChangePositionTask
+? IChangePositionTask :
+ T extends CalendarEvents.RowClick
+? IRowClick : never
+
+interface IChangePositionTask {
+  
+}
+
+interface IRowClick {}
+
 
 //#region Data default
 export const defaultViewOptions = {
   startDate: new Date(),
   intervalMinutes: 15,
-  startTime: "01:00" as Hour,
-  endTime: "24:00" as Hour,
+  startTime: "01:00" as Time,
+  endTime: "24:00" as Time,
   heightRow: 36,
 };
 
@@ -59,6 +71,7 @@ export const defaultWeekViewOptions: IWeekViewOptions = {
   idFormCreateOrEditTask: "",
   cbRemoveTask: fetchGet,
   cbEditTask: fetchGet,
+  cbChangePositionTask: (_old, _new) => Promise.resolve(true)
 };
 //#endregion
 
@@ -76,23 +89,3 @@ export interface IHeaderCalendar {
   // previous(): void;
 }
 
-// export interface ICalendarBody {
-//   getColumns(): CalendarBodyColumn[];
-//   getTaskForId(id: any): CalendarTask;
-//   getRows(): CalendarBodyRow[];
-//   getHeightRow(): number;
-//   getBackdrop(): CalendarBodyBackdrop;
-// }
-
-// export interface ICalendarDataWeek extends ICalendarData {
-//   startDate: Date;
-//   endDate: Date;
-// }
-
-
-// export interface ICalendar {
-//   render(args?: any): void;
-//   addTask(): void;
-//   listEvent: any;
-//   next(): void;
-// }

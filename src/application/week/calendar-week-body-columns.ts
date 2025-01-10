@@ -2,12 +2,14 @@ import { IWeekViewOptions } from "../../domain/calendar/contracts/ICalendar";
 import { CalendarTask } from "../../domain/calendar/entities/Task/CalendarTask";
 import { getStartDateOfWeek } from "../../domain/tools/tools";
 import { CalendarBodyColumn } from "../shared/calendar-body-column";
-// import { CalendarWeekBodyRow } from "./calendar-week-body-row";
 
 export class CalendarWeekBodyColumns {
-  element = document.createElement("div");
-//   protected abstract options: IWeekViewOptions;
+  
+  /**
+   * key of date is format to function toLocaleDateString()
+   */
   protected days: Map<string,CalendarBodyColumn> = new Map();
+  element = document.createElement("div");
 
   constructor(private options : IWeekViewOptions) {
     this.assignClassCss();
@@ -72,10 +74,8 @@ export class CalendarWeekBodyColumns {
     });
   }
 
-  addTask(task: CalendarTask) {
-    const columnDay = this.days.get(task.getDate().toLocaleDateString());
-    if (columnDay) {
-
-    }
+  removeTask(task: CalendarTask){
+    const key = task.getDate().toLocaleDateString();
+    return this.days.get(key)?.removeTask(task.getId())
   }
 }

@@ -1,5 +1,4 @@
 import {
-  ICalendarDataWeek,
   IWeekViewOptions,
 } from "../../domain/calendar/contracts/ICalendar";
 import { ICalendarBody, IViewWeek } from "../../domain/calendar/entities/iview";
@@ -56,9 +55,9 @@ export class CalendarWeek implements IViewWeek {
     return this.body;
   }
 
-  getData(): ICalendarDataWeek {
-    throw new Error("Method not implemented.");
-  }
+  // getData(): ICalendarDataWeek {
+  //   throw new Error("Method not implemented.");
+  // }
 
   next(): void {
     this.header.next();

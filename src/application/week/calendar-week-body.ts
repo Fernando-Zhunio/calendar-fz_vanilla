@@ -1,5 +1,6 @@
 import { IWeekViewOptions } from "../../domain/calendar/contracts/ICalendar";
 import { ICalendarBody } from "../../domain/calendar/entities/iview";
+import { CalendarTask } from "../../domain/calendar/entities/Task/CalendarTask";
 import { CalendarWeekBodyColumns } from "./calendar-week-body-columns";
 import { CalendarWeekBodyRow } from "./calendar-week-body-row";
 import { CalendarWeekBodyRows } from "./calendar-week-body-rows";
@@ -16,6 +17,7 @@ export class CalendarWeekBody implements ICalendarBody  {
   nextBody(): void {
     throw new Error("Method not implemented.");
   }
+
   previousBody(): void {
     throw new Error("Method not implemented.");
   }
@@ -35,5 +37,9 @@ export class CalendarWeekBody implements ICalendarBody  {
   assignClassCss() {
     this.element.classList.add("calendar__body_week");
     // this.elementRows.classList.add("calendar__body_week_rows");
+  }
+
+  removeTask(task: CalendarTask): boolean {
+    return !!this.bodyColumns.getDays().get(task.getDate().toLocaleDateString())?.removeTask(task.getId())
   }
 }

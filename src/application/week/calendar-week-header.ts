@@ -23,6 +23,10 @@ export class CalendarWeekHeader implements ICalendarHeader {
     return this.element;
   }
 
+  getColumns() {
+    return this.columnsHeader
+  }
+
   protected getStartDate(date?: Date, startDay?: number): Date {
     return getStartDateOfWeek(
       date || this.options.startDate,
