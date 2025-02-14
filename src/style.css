@@ -356,7 +356,7 @@ button:disabled.is-loading::after,
 
 }
 
-.calendar__body_task_content {
+.calendar__task {
   background-color: aquamarine;
   border-radius: 5px;
   box-sizing: border-box;
@@ -367,7 +367,7 @@ button:disabled.is-loading::after,
   padding: 3px;
 }
 
-.calendar__body_task_content_hour {
+.calendar__task__footer {
   font-size: 12px;
 }
 

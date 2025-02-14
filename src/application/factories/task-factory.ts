@@ -1,3 +1,4 @@
+// import { Time } from "../../application-contract/hour";
 import { CalendarFz } from "../../domain/calendar/entities/CalendarFz";
 import { CalendarTask } from "../../domain/calendar/entities/Task/CalendarTask";
 import {
@@ -19,24 +20,32 @@ export class TaskFactory {
   // private static currentTaskMovement!: CalendarTask
 
   private static movements: CalendarTaskMovements = new CalendarTaskMovements()
-
-  static createTask(task: CalendarTask, scope: ScopeCalendar) {
-    const calendar = scope.getValue<CalendarFz>(ScopeTokens.CALENDAR);
-    this.generatePositionAndHeightTask(task, calendar);
-    this.assignDayColumnTask(task, calendar);
+  private static listTask: any[] = []
+  static add(task: CalendarTask) {
+    // const calendar = scope.getValue<CalendarFz>(ScopeTokens.CALENDAR);
+    // this.assignPositionByTime(task, calendar);
+    // this.assignDayColumnTask(task, calendar);
+    this.listTask.push(task)
+    this.addMovement(task, task.getScope())
   }
 
   static createTasks(tasks: CalendarTask[], scope: ScopeCalendar) {
     const calendar = scope.getValue<CalendarFz>(ScopeTokens.CALENDAR);
     tasks.forEach((task) => {
-      this.generatePositionAndHeightTask(task, calendar);
+      this.assignPositionByTime(task, calendar);
       this.addMovement(task, scope);
       task.setScope(scope);
     });
     this.assignDayColumnTasks(tasks, calendar);
   }
 
-  private static assignDayColumnTask(task: CalendarTask, calendar: CalendarFz) {
+  // static changeTime(time: Time, task: CalendarTask, scope: ScopeCalendar) {
+  //   this.generatePositionByTime(task, this.getCalendarByScope(scope));
+  //   this.movements.addMovements(task)
+
+  // }
+
+  static assignDayColumnTask(task: CalendarTask, calendar: CalendarFz) {
     if (calendar.getTypeView() == TypesView.weeks) {
       const body = calendar.view.getBody() as CalendarWeekBody;
       const key = task.getDate().toLocaleDateString();
@@ -79,7 +88,7 @@ export class TaskFactory {
     }
   }
 
-  private static generatePositionAndHeightTask(
+  static assignPositionByTime(
     task: CalendarTask,
     calendar: CalendarFz
   ) {
@@ -112,7 +121,5 @@ export class TaskFactory {
         ).body.bodyColumns.getDays().size;
     }
   }
-
-
 
 }

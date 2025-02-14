@@ -28,7 +28,6 @@ export class CalendarBodyRow extends CalendarRows implements IRow {
 
   private generateEventClick() {
     // this.element.addEventListener("click", (e: MouseEvent) => {
-    //   // debugger;
     //   console.log((e.target as any).getBoundingClientRect())
     //   const position =
     //     e.clientX - (e.target as any).getBoundingClientRect().left;

@@ -55,7 +55,6 @@ export class CalendarBodyColumn extends CalendarElement {
   }
 
   removeTask(taskId: Symbol): boolean {
-    debugger;
     const index = this.tasks.findIndex((x) => x.getId() == taskId);
     if (index == -1) {
       return false;
@@ -73,38 +72,38 @@ export class CalendarBodyColumn extends CalendarElement {
     );
 
     let zIndex = 2;
-    console.log(
-      "this.taskList",
-      this.tasks.map((x) => x.getStartTime() + "-" + x.getEndTime()).join("\n")
-    );
-    this.tasks.forEach((task) => {
-      let taskIntercepts = this.getIntercepters(task);
-      if (taskIntercepts.length <= 1) {
-        return;
-      }
-      taskIntercepts.forEach((task, index) => {
-        const element = task.getElement();
-        const startTime = task.getStartTime();
-        const interceptsAux = [...taskIntercepts];
-        interceptsAux.splice(index, 1);
-        const hasFullWidth = interceptsAux.every(
-          (x) => Math.abs(diffTime(x.getStartTime(), startTime)) > 5
-        );
-        if (hasFullWidth) {
-          element.style.width = `97%`;
-          element.style.left = `2%`;
-          taskIntercepts.splice(index, 1);
-        }
-        element.style.zIndex = zIndex.toString();
-        zIndex++;
-        //console.log("taskIntercepts", task.getStartTime(), '-', task.getEndTime());
-      });
-      taskIntercepts.forEach((task, index) => {
-        const element = task.getElement();
-        element.style.width = `${100 / taskIntercepts.length}%`;
-        element.style.left = `${(100 / taskIntercepts.length) * index}%`;
-      });
-    });
+    // console.log(
+    //   "this.taskList",
+    //   this.tasks.map((x) => x.getStartTime() + "-" + x.getEndTime()).join("\n")
+    // );
+    // this.tasks.forEach((task) => {
+    //   let taskIntercepts = this.getIntercepters(task);
+    //   if (taskIntercepts.length <= 1) {
+    //     return;
+    //   }
+    //   taskIntercepts.forEach((task, index) => {
+    //     const element = task.getElement();
+    //     const startTime = task.getStartTime();
+    //     const interceptsAux = [...taskIntercepts];
+    //     interceptsAux.splice(index, 1);
+    //     const hasFullWidth = interceptsAux.every(
+    //       (x) => Math.abs(diffTime(x.getStartTime(), startTime)) > 5
+    //     );
+    //     if (hasFullWidth) {
+    //       element.style.width = `97%`;
+    //       element.style.left = `2%`;
+    //       taskIntercepts.splice(index, 1);
+    //     }
+    //     element.style.zIndex = zIndex.toString();
+    //     zIndex++;
+    //     //console.log("taskIntercepts", task.getStartTime(), '-', task.getEndTime());
+    //   });
+    //   taskIntercepts.forEach((task, index) => {
+    //     const element = task.getElement();
+    //     element.style.width = `${100 / taskIntercepts.length}%`;
+    //     element.style.left = `${(100 / taskIntercepts.length) * index}%`;
+    //   });
+    // });
     this.renderTasks(tasks);
   }
 

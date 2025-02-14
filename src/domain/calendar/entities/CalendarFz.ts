@@ -1,4 +1,4 @@
-import { TaskFactory } from "../../../application/factories/task-factory";
+import { TaskFactory as TaskManager } from "../../../application/factories/task-factory";
 import { CalendarWeek } from "../../../application/week/calendar-week";
 import { ScopeCalendar, ScopeTokens } from "../../../infraestructure/dependency-container";
 import { Popover } from "../../popover/Popover";
@@ -166,11 +166,15 @@ export class CalendarFz {
   }
 
   addTask(task: CalendarTask) {
-    TaskFactory.createTask(task, this.scope);
+    task.setScope(this.scope);
+    TaskManager.add(task);
   }
 
   addTasks(tasks: CalendarTask[]) {
-    TaskFactory.createTasks(tasks, this.scope);
+    tasks.forEach((task) => {
+      this.addTask(task);
+    });
+    // TaskManager.createTasks(tasks, this.scope);
   }
 
   // getData() {

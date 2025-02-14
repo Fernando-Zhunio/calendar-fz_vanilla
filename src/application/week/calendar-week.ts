@@ -47,7 +47,6 @@ export class CalendarWeek implements IViewWeek {
 
   changeInterval(interval: number): void {
     this.options.intervalMinutes = interval;
-    debugger;
     this.body.bodyRows.initRows();
   }
 

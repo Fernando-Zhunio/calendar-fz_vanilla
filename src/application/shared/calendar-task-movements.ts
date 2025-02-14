@@ -1,3 +1,4 @@
+import { Time } from "../../application-contract/hour";
 import {
   IDayViewOptions,
   IViewOptions,
@@ -9,7 +10,9 @@ import { addMinutes, calculeDistanceTime, convertMinutesToPixels, convertPixelsT
 import {
   ScopeTokens,
 } from "../../infraestructure/dependency-container";
+import { TaskFactory } from "../factories/task-factory";
 import { CalendarWeek } from "../week/calendar-week";
+import { CalendarWeekBody } from "../week/calendar-week-body";
 
 //const classSelector = 'calendar__body_task';
 
@@ -24,7 +27,7 @@ export class CalendarTaskMovements {
   numColumns: number = 0;
   columnWidth: number = 0;
   hits: number = 0;
-  childClone!: HTMLElement;
+  childCloneElement!: HTMLElement;
   positions = {
     currentX: 0,
     currentY: 0,
@@ -36,6 +39,8 @@ export class CalendarTaskMovements {
   intervalMinutes!: number;
   distanceTime!:number;
   ditstanceStartTime!: number;
+  //currentColumn!: number;
+  newTime!: {startTime: Time, endTime: Time}
 
   constructor() {
     document.onmouseup = this.onMouseUp.bind(this);
@@ -68,8 +73,8 @@ export class CalendarTaskMovements {
   }
 
   getPositionUpDown() {
-    let rectClone = this.childClone.getBoundingClientRect();
-    let currentPosition = this.childClone.offsetTop - this.positions.currentY;
+    let rectClone = this.childCloneElement.getBoundingClientRect();
+    let currentPosition = this.childCloneElement.offsetTop - this.positions.currentY;
 
     currentPosition = Math.floor(currentPosition / this.hits) * this.hits;
     return Math.min(
@@ -90,15 +95,16 @@ export class CalendarTaskMovements {
   private onMouseDown(e: MouseEvent, task: CalendarTask) {
     e = e || window.event;
     e.preventDefault();
-    console.log('onmousedown')
     this.currentTask = task;
     const element = this.getElementTask();
     const calendarWeek = this.getView<CalendarWeek>().body.bodyColumns;
     this.parent = calendarWeek.getElement();
     this.numColumns = calendarWeek.getDays().size;
     this.columnWidth = calendarWeek.getElement().offsetWidth / this.numColumns;
-    this.childClone = this.copyElement(element, this.columnWidth);
-    this.parent.appendChild(this.childClone);
+    this.childCloneElement = this.copyElement(element, this.columnWidth);
+
+    //this.parent.appendChild(this.childClone);
+
     this.options = this.getOptions();
     this.intervalMinutes = this.options.intervalMinutes;
     this.distanceTime = calculeDistanceTime(task.getStartTime(), task.getEndTime())
@@ -109,15 +115,16 @@ export class CalendarTaskMovements {
       this.options.intervalMinutes
     );
     element.style.opacity = "0";
-    // get the mouse cursor position at startup:
     this.positions.startX = e.pageX;
     this.positions.startY = e.pageY;
 
     this.rectParent = this.parent.getBoundingClientRect();
     let column = Math.floor((e.clientX - this.rectParent.x) / this.columnWidth);
     column = Math.min(Math.max(column, 0), this.numColumns - 1);
-    //this.currentPositionY = this.getPositionUpDown();
-    this.childClone.style.left = `${column * this.columnWidth}px`;
+    console.log('column', column, this.parent.childNodes[column])
+    this.parent.childNodes[column].appendChild(this.childCloneElement);
+    this.childCloneColumn = column;
+    //this.childClone.style.left = `${column * this.columnWidth}px`;
   }
 
   private onMouseMove(e: MouseEvent) {
@@ -135,24 +142,31 @@ export class CalendarTaskMovements {
     //this.positions.startY = e.pageY;
 
     //RESUME: calcula la posicion de la columna
-    let column = Math.floor((e.clientX - this.rectParent.x) / this.columnWidth);
-    column = Math.min(Math.max(column, 0), this.numColumns - 1);
-    this.childClone.style.left = `${column * this.columnWidth}px`;
-    this.childCloneColumn = column;
+    this.calculeColumn(e.clientX);
 
     //RESUME: calcula la posicion de la fila
     let currentPositionY = this.getPositionUpDown();
 
     if (Math.abs(this.positions.currentY) >= this.hits) {
       this.positions.startY = e.pageY;
-      this.childClone.style.top = currentPositionY + "px";
-      const newTime = this.calculeNewHours()
-      if (this.childClone.querySelector('.calendar__body_task_content_hour') ) {
-        this.childClone.querySelector('.calendar__body_task_content_hour')!.textContent = `${newTime.startTime} - ${newTime.endTime}`
-
+      this.childCloneElement.style.top = currentPositionY + "px";
+       this.newTime = this.calculeNewHours()
+      if (this.childCloneElement.querySelector('.calendar__body_task_content_hour') ) {
+        this.childCloneElement.querySelector('.calendar__body_task_content_hour')!.textContent = `${this.newTime.startTime} - ${this.newTime.endTime}`
       }
     }
   }
+
+  calculeColumn(clientX: number) {
+    let column = Math.floor((clientX - this.rectParent.x) / this.columnWidth);
+    column = Math.min(Math.max(column, 0), this.numColumns - 1);
+    if (this.childCloneColumn == column) return;
+    //this.childClone.style.left = `${column * this.columnWidth}px`;
+    this.childCloneColumn = column;
+    this.parent.childNodes[column].appendChild(this.childCloneElement);
+  }
+
+
 
   private onMouseUp(_e: MouseEvent) {
     if (!this.currentTask) return;
@@ -160,23 +174,31 @@ export class CalendarTaskMovements {
     if (this.isChange()) {
       this.getOptions().cbChangePositionTask(this.currentTask, this.currentTask).then((res) => {
         if (res) {
-          this.confirmChangePosition()
+          const calendar = this.getCalendar();
+          const body = calendar.view.getBody() as CalendarWeekBody;
+          const calendarColumn = body.bodyColumns.getDayByIndex(this.childCloneColumn)!;
+          this.currentTask.changeDate(calendarColumn.getDate());
+          this.currentTask.changeTime(this.newTime.startTime, this.newTime.endTime);
+          //TaskFactory.assignDayColumnTask(this.currentTask, this.getCalendar())
+          this.confirmChangePosition();
+          // this.calendar.view.getBody().addTask(this.currentTask, this.newTime.startTime, this.newTime.endTime, this.currentColumn)
         } else {
           this.cancelChangePosition()
         }
       }).catch(_err => {
-
+        debugger;
         this.cancelChangePosition()
       })
     } else {
-      
+      debugger;
+      this.cancelChangePosition()
     }
   }
 
-  confirmChangePosition(){
-    this.removeTask()
-    this.childClone.remove();
-    (this.currentTask as any) = null;
+  confirmChangePosition() {
+   // this.removeTask()
+    this.childCloneElement.remove();
+    //(this.currentTask as any) = null;
   }
 
   removeTask(){
@@ -185,12 +207,12 @@ export class CalendarTaskMovements {
 
   cancelChangePosition(){
     this.currentTask.getElement().style.opacity = "1";
-    this.childClone.remove();
+    this.childCloneElement.remove();
     (this.currentTask as any) = null;
   }
 
   calculeNewHours(){
-    let startTime = convertPixelsToTime(this.options.heightRow, this.childClone.offsetTop, this.intervalMinutes)
+    let startTime = convertPixelsToTime(this.options.heightRow, this.childCloneElement.offsetTop, this.intervalMinutes)
     startTime = addMinutes(startTime, this.ditstanceStartTime)
     return {
       startTime,
@@ -200,11 +222,9 @@ export class CalendarTaskMovements {
 
   isChange(): boolean {
     const currentTaskColumn = this.getColumnByDate(this.currentTask.getDate());
-     return (this.getElementTask().style.top != this.childClone.style.top)
+     return (this.getElementTask().style.top != this.childCloneElement.style.top)
      || currentTaskColumn == this.childCloneColumn
   }
-
-
 
   getColumnByDate(date: Date, isReturnObject: boolean = false) {
     const columns =

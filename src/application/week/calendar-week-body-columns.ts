@@ -16,8 +16,21 @@ export class CalendarWeekBodyColumns {
     this.initColumns();
   }
 
+  /**
+   * - clave se genera de la funcion toLocaleDateString() de un objeto Date
+   * - valor es una clase CalendarBodyColumn
+   * @returns 
+   * Map<string,CalendarBodyColumn>
+   */
   getDays() {
     return this.days;
+  }
+
+  getDayByIndex(index: number) {
+    const sort = Array.from(this.days.keys()).sort((a,b) => new Date(a).getTime() - new Date(b).getTime());
+    return this.days.get(
+      sort[index]
+    );
   }
 
   assignClassCss() {

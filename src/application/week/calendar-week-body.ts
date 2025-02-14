@@ -2,11 +2,11 @@ import { IWeekViewOptions } from "../../domain/calendar/contracts/ICalendar";
 import { ICalendarBody } from "../../domain/calendar/entities/iview";
 import { CalendarTask } from "../../domain/calendar/entities/Task/CalendarTask";
 import { CalendarWeekBodyColumns } from "./calendar-week-body-columns";
-import { CalendarWeekBodyRow } from "./calendar-week-body-row";
+//import { CalendarWeekBodyRow } from "./calendar-week-body-row";
 import { CalendarWeekBodyRows } from "./calendar-week-body-rows";
 
 export class CalendarWeekBody implements ICalendarBody  {
-  protected rows: CalendarWeekBodyRow[] = [];
+ // protected rows: CalendarWeekBodyRow[] = [];
   element: HTMLElement = document.createElement("div");
   bodyRows!: CalendarWeekBodyRows;
   bodyColumns!: CalendarWeekBodyColumns;
